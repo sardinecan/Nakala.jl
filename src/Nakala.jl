@@ -1,5 +1,9 @@
 module Nakala
 
-greet() = print("Hello World!")
+import HTTP
+import JSON
+
+include("./search.jl")
+include("./datas.jl")
 
 end # module Nakala
