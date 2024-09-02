@@ -1,5 +1,5 @@
 """
-postFile(file::String, headers::Dict, apiTest::Bool=false)
+postFiles(file::String, headers::Dict, apiTest::Bool=false)
 
 Permet de déposer une donnée dans Nakala.
 Les fichiers associés à la donnée sont à déposer avant via POST /uploads.
@@ -13,10 +13,10 @@ julia> headers = Dict(
 
 julia> file = "/Users/josselinmorvan/files/dh/Nakala.jl/test/file.txt"
 
-julia> postFile(file, headers)
+julia> postFiles(file, headers)
 ```
 """
-function postFile(file::String, headers::Dict, apiTest::Bool=false)
+function postFiles(file::String, headers::Dict, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", "uploads")
 
@@ -43,6 +43,67 @@ function postFile(file::String, headers::Dict, apiTest::Bool=false)
       return "An unexpected error occurred: $(e)"
     end
   end
+end
+
+"""
+
+Ajout d'un fichier à une donnée.
+
+Permet d'ajouter un fichier à une donnée. Attention, le fichier doit être déposé avant à l'aide de la requête POST /uploads.
+
+# example 
+```julia-repl
+
+```
+"""
+function postDatasFiles(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "files")
+  
+  try
+    query = HTTP.post(url, headers, JSON.json(body))
+    code = HTTP.status(query)
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+   
+ end
+
+"""
+"""
+function deleteDatasFiles(identifier::String, fileIdentifier::String, headers::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "files", fileIdentifier)
+  try
+    # Envoi de la requête
+    query = HTTP.request("DELETE", url, headers)
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    return code
+    
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return "Request failed with status code $(e.status)"
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+
 end
 
 """
@@ -237,4 +298,255 @@ function deleteDatas(identifier::String, headers::Dict, apiTest=false)
       return "An unexpected error occurred: $(e)"
     end
   end
+end
+
+"""
+ getDatasFiles (identifier::String, headers::Dict, apiTest::Bool=false)
+
+Permet d'obtenir l'ensemble des informations sur les fichiers associés à une donnée. Pour accéder à la version spécifique d'une donnée, vous pouvez ajouter un numéro de version après l'identifiant de la donnée (ex: 10.34847/nkl.eabbbf68.v2 donne accès à la version 2 de la donnée 10.34847/nkl.eabbbf68)
+
+# example
+```julia-repl
+julia> identifier = 
+
+julia> headers = Dict(
+  "X-API-KEY" => apikey,
+  :accept => "application/json"
+)
+
+julia> getDatasFiles (identifier, headers)
+
+```
+"""
+function getDatasFiles(identifier::String, headers::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "files")
+  try
+    # Envoi de la requête
+    query = HTTP.request("get", url, headers)
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+end
+
+
+"""
+# example
+```julia-repl
+```
+"""
+function getDatasMetadatas(identifier::String, headers::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "metadatas")
+  try
+    # Envoi de la requête
+    query = HTTP.request("get", url, headers)
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+
+end
+
+"""
+# example
+```julia-repl
+```
+"""
+function postDatasMetadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "metadatas")
+  try
+    # Envoi de la requête
+    query = HTTP.request("post", url, headers, JSON.json(body))
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+
+end
+
+"""
+# example
+```julia-repl
+```
+"""
+function deleteDatasMetadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "metadatas")
+  try
+    # Envoi de la requête
+    query = HTTP.request("delete", url, headers, JSON.json(body))
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+
+end
+
+"""
+# example
+```julia-repl
+```
+"""
+function getDatasRelations(identifier::String, headers::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "relations")
+  try
+    # Envoi de la requête
+    query = HTTP.request("get", url, headers)
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+
+end
+
+"""
+# example
+```julia-repl
+```
+"""
+function postDatasRelations(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "relations")
+  try
+    # Envoi de la requête
+    query = HTTP.request("post", url, headers, JSON.json(body))
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+
+end
+
+"""
+# example
+```julia-repl
+```
+"""
+function deleteDatasRelations(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "datas", identifier, "relations")
+  try
+    # Envoi de la requête
+    query = HTTP.request("delete", url, headers, JSON.json(body))
+    code = HTTP.status(query)
+    # response = JSON.parse(String(HTTP.payload(query)))
+    
+    response = JSON.parse(String(HTTP.payload(query)))
+    return Dict(
+      "code" => code,
+      "response" => response
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "response" => "Request failed with status code $(e.status): $(e.response)",
+        "code" => e.status
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return "An unexpected error occurred: $(e)"
+    end
+  end
+
 end
