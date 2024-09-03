@@ -1,4 +1,5 @@
 using Test
+using JSON
 apikey = "01234567-89ab-cdef-0123-456789abcdef" #public key for test api
 #==
 Dépôt de fichier
@@ -29,6 +30,7 @@ body = Dict(
   :metas => [
     Dict(:value => "title", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "http://purl.org/coar/resource_type/c_18cf", :propertyUri => "http://nakala.fr/terms#type", :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI"),
+    Dict(:value => Dict(:surname => "unknown", :givenname => "user"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "2024-09-01", :propertyUri => "http://nakala.fr/terms#created", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "PDM", :propertyUri => "http://nakala.fr/terms#license", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "Description", :propertyUri => "http://purl.org/dc/terms/description", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
@@ -43,6 +45,7 @@ body = Dict(
   :rights => []
 )
 postedData = Nakala.postdatas(headers, body, true)
+postedData["response"]
 @test postedData["code"] == 201
 identifier = postedData["response"]["payload"]["id"] 
 
@@ -61,6 +64,7 @@ body = Dict(
   "metas" => [
     Dict("value" => "New title test", "propertyUri" => "http://nakala.fr/terms#title", "lang" => "fr", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
     Dict("value" => "http://purl.org/coar/resource_type/c_18cf", "propertyUri" => "http://nakala.fr/terms#type", "typeUri" => "http://www.w3.org/2001/XMLSchema#anyURI"),
+    Dict(:value => Dict(:surname => "unknown", :givenname => "user"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict("value" => "2024-09-01", "propertyUri" => "http://nakala.fr/terms#created", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
     Dict("value" => "PDM", "propertyUri" => "http://nakala.fr/terms#license", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
     Dict("value" => "Description modifiée 2.", "propertyUri" => "http://purl.org/dc/terms/description", "lang" => "fr", "typeUri" => "http://www.w3.org/2001/XMLSchema#string")
@@ -191,6 +195,106 @@ body = Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1",
 @test Nakala.deletedatas_relations(identifier, headers, body, true)["code"] == 200
 
 Nakala.getdatas_relations(identifier, headers, true)
+
+#==
+récupération des droits sur une donnée
+==#
+Nakala.getdatas_rights(identifier, headers, true)["response"]
+@test Nakala.getdatas_rights(identifier, headers, true)["code"] == 200
+
+#==
+Ajout des droits sur une donnée
+==#
+body = [
+  Dict(
+    :id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f3b", # id of public profile unakala1
+    :role => "ROLE_READER"
+  )
+]
+Nakala.postdatas_rights(identifier, headers, body, true)["response"]
+@test Nakala.postdatas_rights(identifier, headers, body, true)["code"] == 200
+#==
+Supprimer des droits sur une donnée
+==#
+headers = Dict(
+  "X-API-KEY" => apikey,
+  "Content-Type" => "application/json"
+)
+body = Dict(
+  :id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f3b",
+  :role => "ROLE_READER"
+)
+# ou Dict(:role => "ROLE_READER") pour supprimer tous les lecteurs.
+#Nakala.deletedatas_rights(identifier, headers, body, true)["response"]
+@test Nakala.deletedatas_rights(identifier, headers, body, true)["code"] == 200
+
+#==
+récupération des collections d'une donnée
+==#
+Nakala.getdatas_collections(identifier, headers, true)
+
+#==
+Ajout d'une donnée dans un ensemble de collections.
+==#
+#creation de la collection et récupération de l'id
+# la collection doit être publique pour être liée à une donnée publique
+headers = Dict(
+  "X-API-KEY" => apikey,
+  "Content-Type" => "application/json"
+)
+body = Dict(
+  :status => "public",
+  :metas => [
+    Dict(:value => "New Collection", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string")
+    ],
+  :datas => [],
+  :rights => []
+)
+
+newcollectionid = Nakala.Collections.postcollection(headers, body, true)["response"]["payload"]["id"]
+
+body = [newcollectionid]
+Nakala.postdatas_collections(identifier, headers, body, true)["response"]
+
+#==
+Remplacement de l'ensemble des collections d'une donnée.
+==#
+#creation d'une autre collection pour remplacer la première
+body = Dict(
+  :status => "public",
+  :metas => [
+    Dict(:value => "Nouvelle collection", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string")
+    ],
+  :datas => [],
+  :rights => []
+)
+nouvellecollectionid = Nakala.Collections.postcollection(headers, body, true)["response"]["payload"]["id"]
+
+headers = Dict(
+  "X-API-KEY" => apikey,
+  :accept => "application/json",
+  "Content-Type" => "application/json"
+)
+body = [
+  nouvellecollectionid
+]
+b = ["10.34847/nkl.a94di1v6"]
+identifier
+
+Nakala.putdatas_collections(identifier, headers, body, true)
+
+#==
+Suppression d'une donnée d'un ensemble de collections.
+==#
+Nakala.deletedatas_collections(identifier, headers, body, true)
+
+#Nakala.getdatas_status(identifier, headers, true)
+#Nakala.putdatas_status(identifier, headers, "published", true)
+
+Nakala.getdatas_uploads(headers, true)
+
+Nakala.deletedatas_uploads(sha1, headers, true)
+
 
 #==
 Supprimer une donnée

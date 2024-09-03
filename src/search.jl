@@ -1,3 +1,6 @@
+module Search
+using HTTP
+using JSON
 """
   searchAuthors(params::Array, apiTest::Bool=false)
 
@@ -104,3 +107,5 @@ end
     end
   end
 end
+
+end # end module search

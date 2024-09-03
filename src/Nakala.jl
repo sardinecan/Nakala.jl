@@ -6,4 +6,6 @@ import JSON
 include("./search.jl")
 include("./datas.jl")
 include("./vocabularies.jl")
+include("./collections.jl")
 end # module Nakala
+  
