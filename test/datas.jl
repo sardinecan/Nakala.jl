@@ -1,5 +1,7 @@
 using Test
 using JSON
+using Downloads
+path = @__DIR__
 apikey = "01234567-89ab-cdef-0123-456789abcdef" #public key for test api
 #==
 Dépôt de fichier
@@ -8,7 +10,7 @@ headers = Dict(
   "X-API-KEY" => apikey,
   :accept => "application/json"
 )
-file = "/Users/josselinmorvan/files/dh/Nakala.jl/test/file.txt"
+file = "$path/file.txt"
 postedFile = Nakala.postfiles(file, headers, true)
 sha1 = postedFile["response"]["sha1"]
 @test response = get(postedFile, "code", "") == 201
@@ -295,6 +297,13 @@ Nakala.getdatas_uploads(headers, true)
 
 Nakala.deletedatas_uploads(sha1, headers, true)
 
+
+header = Dict(
+  "X-API-KEY" => apikey,
+  "Content-Type" => "application/json"
+)
+output = "/home/josselin/Téléchargements"
+Nakala.downloaddatas_files(identifier,  output, header, true)
 
 #==
 Supprimer une donnée

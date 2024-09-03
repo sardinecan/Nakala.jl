@@ -225,7 +225,7 @@ julia> identifier =  "10.34847/nkl.12345678"
 julia> Nakala.getDatas(headers, identifier)
 ```
 """
-function getdatas(identifier::String, headers::Dict, apiTest=false)
+function getdatas_version(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "version")
   try
@@ -943,5 +943,23 @@ function deletedatas_uploads(fileIdentifier::String, headers::Dict, apiTest::Boo
       # Gestion des autres types d'erreurs
       return "An unexpected error occurred: $(e)"
     end
+  end
+end
+
+"""
+# example
+```julia-repl
+```
+"""
+function downloaddatas_files(identifier::String, outputDir::String, header::Dict, apiTest::Bool=false)
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  url = joinpath(apiurl, "download", "datas", identifier, "files?extension=zip")
+  output = joinpath(outputDir, HTTP.escapeuri(identifier)*".zip")
+  try
+    # Envoi de la requête
+    dl = Downloads.download(url, output, headers=header)
+    return "Fichier enregistré sous $dl"
+  catch e
+    return "An unexpected error occurred: $(e)"  
   end
 end
