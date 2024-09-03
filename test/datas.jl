@@ -8,7 +8,7 @@ headers = Dict(
   :accept => "application/json"
 )
 file = "/Users/josselinmorvan/files/dh/Nakala.jl/test/file.txt"
-postedFile = Nakala.postFiles(file, headers, true)
+postedFile = Nakala.postfiles(file, headers, true)
 sha1 = postedFile["response"]["sha1"]
 @test response = get(postedFile, "code", "") == 201
 
@@ -42,15 +42,15 @@ body = Dict(
   ],
   :rights => []
 )
-postedData = Nakala.postDatas(headers, body, true)
+postedData = Nakala.postdatas(headers, body, true)
 @test postedData["code"] == 201
 identifier = postedData["response"]["payload"]["id"] 
 
 #==
 Récupération des informations d'une donnée
 ==#
-@test get(Nakala.getDatas(identifier, headers, true), "code", "") == 200
-d = Nakala.getDatas(identifier, headers, true)
+@test get(Nakala.getdatas(identifier, headers, true), "code", "") == 200
+d = Nakala.getdatas(identifier, headers, true)
 
 #==
 Modifier les informations d'une donnée
@@ -66,7 +66,7 @@ body = Dict(
     Dict("value" => "Description modifiée 2.", "propertyUri" => "http://purl.org/dc/terms/description", "lang" => "fr", "typeUri" => "http://www.w3.org/2001/XMLSchema#string")
   ]
 )
-@test Nakala.putDatas(identifier, headers, body, true) == 204
+@test Nakala.putdatas(identifier, headers, body, true) == 204
 
 
 #==
@@ -77,8 +77,8 @@ headers = Dict(
   :accept => "application/json"
 )
 
-@test Nakala.getDatasFiles(identifier, headers, true)["code"] == 200
-Nakala.getDatasFiles(identifier, headers, true)["response"]
+@test Nakala.getdatas_files(identifier, headers, true)["code"] == 200
+Nakala.getdatas_files(identifier, headers, true)["response"]
 
 #==
 Ajouter un fichier à une donnée
@@ -88,7 +88,7 @@ headers = Dict(
   :accept => "application/json"
 )
 file = "/Users/josselinmorvan/files/dh/Nakala.jl/test/file2.txt"
-postedFile = Nakala.postFiles(file, headers, true)
+postedFile = Nakala.postfiles(file, headers, true)
 sha1 = postedFile["response"]["sha1"]
 
 
@@ -101,7 +101,7 @@ body = Dict(
   "sha1" => sha1,
   "embargoed" => "2024-09-01"
 )
-postedDatasFile = Nakala.postDatasFiles(identifier, headers, body, true)
+postedDatasFile = Nakala.postdatas_files(identifier, headers, body, true)
 postedDatasFile["response"]
 @test postedDatasFile["code"] == 200
 
@@ -112,8 +112,8 @@ headers = Dict(
   "X-API-KEY" => apikey,
   :accept => "application/json"
 )
-fileIdentifier = Nakala.getDatasFiles(identifier, headers, true)["response"][2]["sha1"]
-@test Nakala.deleteDatasFiles(identifier, fileIdentifier, headers, true) == 204
+fileIdentifier = Nakala.getdatas_files(identifier, headers, true)["response"][2]["sha1"]
+@test Nakala.deletedatas_files(identifier, fileIdentifier, headers, true) == 204
 
 #==
 Récupération de la liste des métadonnées
@@ -122,8 +122,8 @@ headers = Dict(
   "X-API-KEY" => apikey,
   "Content-Type" => "application/json"
 )
-Nakala.getDatasMetadatas(identifier, headers, true)
-@test Nakala.getDatasMetadatas(identifier, headers, true)["code"] == 200
+Nakala.getdatas_metadatas(identifier, headers, true)
+@test Nakala.getdatas_metadatas(identifier, headers, true)["code"] == 200
 
 #==
 Ajout d'une nouvelle métadonnée à une donnée
@@ -138,8 +138,8 @@ body = Dict(
   :lang => "en",
   :typeUri => "http://www.w3.org/2001/XMLSchema#string"
 )
-Nakala.postDatasMetadatas(identifier, headers, body, true)
-@test Nakala.postDatasMetadatas(identifier, headers, body, true)["code"] == 201
+Nakala.postdatas_metadatas(identifier, headers, body, true)
+@test Nakala.postdatas_metadatas(identifier, headers, body, true)["code"] == 201
 
 #==
 Suppression de métadonnées pour une donnée
@@ -152,10 +152,10 @@ body = Dict(
   :propertyUri => "http://nakala.fr/terms#title",
   :lang => "en"
 )
-Nakala.deleteDatasMetadatas(identifier, headers, body, true)
-@test Nakala.deleteDatasMetadatas(identifier, headers, body, true)["code"] == 200
+Nakala.deletedatas_metadatas(identifier, headers, body, true)
+@test Nakala.deletedatas_metadatas(identifier, headers, body, true)["code"] == 200
 
-Nakala.getDatasMetadatas(identifier, headers, true)["response"]
+Nakala.getdatas_metadatas(identifier, headers, true)["response"]
 
 #==
 Récupération de la liste des relations d'une donnée
@@ -164,7 +164,7 @@ headers = Dict(
   "X-API-KEY" => apikey,
   "Content-Type" => "application/json"
 )
-@test Nakala.getDatasRelations(identifier, headers, true)["code"] == 200
+@test Nakala.getdatas_relations(identifier, headers, true)["code"] == 200
 
 #==
 Ajout de relations sur une donnée
@@ -178,7 +178,7 @@ headers = Dict(
 body = [
   Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "test")
 ]
-@test Nakala.postDatasRelations(identifier, headers, body, true)["code"] == 200
+@test Nakala.postdatas_relations(identifier, headers, body, true)["code"] == 200
 
 #==
 Suppression des relations sur une donnée
@@ -188,9 +188,9 @@ headers = Dict(
   "Content-Type" => "application/json"
 )
 body = Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "test")
-@test Nakala.deleteDatasRelations(identifier, headers, body, true)["code"] == 200
+@test Nakala.deletedatas_relations(identifier, headers, body, true)["code"] == 200
 
-Nakala.getDatasRelations(identifier, headers, true)
+Nakala.getdatas_relations(identifier, headers, true)
 
 #==
 Supprimer une donnée
@@ -200,7 +200,7 @@ headers = Dict(
   :accept => "application/json"
 )
 
-@test Nakala.deleteDatas(identifier, headers, true) == 204
+@test Nakala.deletedatas(identifier, headers, true) == 204
 
 
 

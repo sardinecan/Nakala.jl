@@ -1,5 +1,5 @@
 """
-postFiles(file::String, headers::Dict, apiTest::Bool=false)
+postfiles(file::String, headers::Dict, apiTest::Bool=false)
 
 Permet de déposer une donnée dans Nakala.
 Les fichiers associés à la donnée sont à déposer avant via POST /uploads.
@@ -13,10 +13,10 @@ julia> headers = Dict(
 
 julia> file = "/Users/josselinmorvan/files/dh/Nakala.jl/test/file.txt"
 
-julia> postFiles(file, headers)
+julia> postfiles(file, headers)
 ```
 """
-function postFiles(file::String, headers::Dict, apiTest::Bool=false)
+function postfiles(file::String, headers::Dict, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", "uploads")
 
@@ -56,7 +56,7 @@ Permet d'ajouter un fichier à une donnée. Attention, le fichier doit être dé
 
 ```
 """
-function postDatasFiles(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+function postdatas_files(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "files")
   
@@ -84,7 +84,7 @@ function postDatasFiles(identifier::String, headers::Dict, body::Dict, apiTest::
 
 """
 """
-function deleteDatasFiles(identifier::String, fileIdentifier::String, headers::Dict, apiTest::Bool=false)
+function deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "files", fileIdentifier)
   try
@@ -107,7 +107,7 @@ function deleteDatasFiles(identifier::String, fileIdentifier::String, headers::D
 end
 
 """
-postDatas(headers, body, apiTest=false)
+postdatas(headers, body, apiTest=false)
 
 Permet de déposer une donnée dans Nakala
 Les fichiers associés à la donnée sont à déposer avant via POST /uploads
@@ -138,10 +138,10 @@ julia> body = Dict(
   :rights => []
 )
 
-julia> postDatas(headers, body)
+julia> postdatas(headers, body)
 ```
 """
-function postDatas(headers::Dict, body::Dict, apiTest=false)
+function postdatas(headers::Dict, body::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas")
   try
@@ -168,7 +168,7 @@ function postDatas(headers::Dict, body::Dict, apiTest=false)
 end
 
 """
-getDatas(headers, dataId, apiTest=false)
+getdatas(headers, dataId, apiTest=false)
 
 Récupération des informations sur une donnée.
 
@@ -183,7 +183,7 @@ julia> identifier =  "10.34847/nkl.12345678"
 julia> Nakala.getDatas(headers, identifier)
 ```
 """
-function getDatas(identifier::String, headers::Dict, apiTest=false)
+function getdatas(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier)
   try
@@ -210,7 +210,7 @@ function getDatas(identifier::String, headers::Dict, apiTest=false)
 end
 
 """
-putDatas(identifier, headers, body, apiTest=false)
+putdatas(identifier, headers, body, apiTest=false)
 
 Modification des informations d'une donnée.
 
@@ -235,10 +235,10 @@ julia> body = Dict(
   ]
 )
 
-julia> putDatas(identifier, headers, body, true)
+julia> putdatas(identifier, headers, body, true)
 ```
 """
-function putDatas(identifier::String, headers::Dict, body::Dict, apiTest=false)
+function putdatas(identifier::String, headers::Dict, body::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier)
   try
@@ -260,7 +260,7 @@ function putDatas(identifier::String, headers::Dict, body::Dict, apiTest=false)
 end
 
 """
-deleteDatas(identifier, headers, apiTest=false)
+deletedatas(identifier, headers, apiTest=false)
 
 Suppression d'une donnée.
 
@@ -275,10 +275,10 @@ julia> headers = Dict(
   :accept => "application/json"
 )
 
-julia> deleteDatas(identifier, headers)
+julia> deletedatas(identifier, headers)
 ```
 """
-function deleteDatas(identifier::String, headers::Dict, apiTest=false)
+function deletedatas(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier)
   try
@@ -301,7 +301,7 @@ function deleteDatas(identifier::String, headers::Dict, apiTest=false)
 end
 
 """
- getDatasFiles (identifier::String, headers::Dict, apiTest::Bool=false)
+ getdatas_files (identifier::String, headers::Dict, apiTest::Bool=false)
 
 Permet d'obtenir l'ensemble des informations sur les fichiers associés à une donnée. Pour accéder à la version spécifique d'une donnée, vous pouvez ajouter un numéro de version après l'identifiant de la donnée (ex: 10.34847/nkl.eabbbf68.v2 donne accès à la version 2 de la donnée 10.34847/nkl.eabbbf68)
 
@@ -318,7 +318,7 @@ julia> getDatasFiles (identifier, headers)
 
 ```
 """
-function getDatasFiles(identifier::String, headers::Dict, apiTest::Bool=false)
+function getdatas_files(identifier::String, headers::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "files")
   try
@@ -352,7 +352,7 @@ end
 ```julia-repl
 ```
 """
-function getDatasMetadatas(identifier::String, headers::Dict, apiTest::Bool=false)
+function getdatas_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "metadatas")
   try
@@ -386,7 +386,7 @@ end
 ```julia-repl
 ```
 """
-function postDatasMetadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+function postdatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "metadatas")
   try
@@ -420,7 +420,7 @@ end
 ```julia-repl
 ```
 """
-function deleteDatasMetadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+function deletedatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "metadatas")
   try
@@ -454,7 +454,7 @@ end
 ```julia-repl
 ```
 """
-function getDatasRelations(identifier::String, headers::Dict, apiTest::Bool=false)
+function getdatas_relations(identifier::String, headers::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "relations")
   try
@@ -488,7 +488,7 @@ end
 ```julia-repl
 ```
 """
-function postDatasRelations(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+function postdatas_relations(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "relations")
   try
@@ -522,7 +522,7 @@ end
 ```julia-repl
 ```
 """
-function deleteDatasRelations(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+function deletedatas_relations(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
    apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "relations")
   try
