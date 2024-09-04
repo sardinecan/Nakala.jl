@@ -10,4 +10,5 @@ include("./vocabularies.jl")
 include("./collections.jl")
 include("./groups.jl")
 include("./users.jl")
+include("./resourceprocessing.jl")
 end # module Nakala
