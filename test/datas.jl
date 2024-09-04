@@ -253,7 +253,7 @@ body = Dict(
   :rights => []
 )
 
-newcollectionid = Nakala.Collections.postcollection(headers, body, true)["response"]["payload"]["id"]
+newcollectionid = Nakala.Collections.postcollections(headers, body, true)["response"]["payload"]["id"]
 
 body = [newcollectionid]
 Nakala.postdatas_collections(identifier, headers, body, true)["response"]
