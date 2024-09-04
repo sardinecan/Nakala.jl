@@ -1,204 +1,307 @@
 using Test
-using JSON
-using Downloads
+using JSON, Downloads
+
 path = @__DIR__
-apikey = "01234567-89ab-cdef-0123-456789abcdef" #public key for test api
+apikey = "01234567-89ab-cdef-0123-456789abcdef" #public key for Nakala test api
+
 #==
-Dépôt de fichier
+Beaucoup de fonctions nécessitent au préalable de créer une donnée sur nakala afin d'être testées. 
+la fonction createData est là à cet effet. 
+elle retourne une identifier fichier et un identifiant donnée.
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
-)
-file = "$path/file.txt"
-postedFile = Nakala.postfiles(file, headers, true)
+function createData()
+  # dépôt d'un fichier
+  headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+  file = "$path/testdata/file.txt"
+  postfiles_response = Nakala.Datas.postfiles(file, headers, true)
+  sha1 = postfiles_response["response"]["sha1"]
+
+  # création de la donnée
+  headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+  body = Dict(
+    :collectionsIds => [],
+    :files => [ Dict("name" => "file.txt", "sha1" => sha1, "embargoed" => "2024-09-01") ],
+    :status => "pending",
+    :metas => [
+      Dict(:value => "Ma donnée", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+      Dict(:value => "http://purl.org/coar/resource_type/c_18cf", :propertyUri => "http://nakala.fr/terms#type", :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI"),
+      Dict(:value => Dict(:surname => "Rémi", :givenname => "Fassol"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+      Dict(:value => "2024-09-01", :propertyUri => "http://nakala.fr/terms#created", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+      Dict(:value => "PDM", :propertyUri => "http://nakala.fr/terms#license", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+      Dict(:value => "Description", :propertyUri => "http://purl.org/dc/terms/description", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+      Dict( :value => Dict( :surname => "Rémi", :givenname => "Fassol" ), :propertyUri => "http://nakala.fr/terms#creator" )
+    ],
+    :rights => []
+  )
+  postdata_response = Nakala.Datas.postdatas(headers, body, true)
+  identifier = postdata_response["response"]["payload"]["id"] 
+
+  return Dict(
+    :fileIdentifier => sha1,
+    :dataIdentifier => identifier
+  )
+end
+
+#==
+Dépôt de fichier.
+==#
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+file = "$path/testdata/file.txt"
+postfiles_response = Nakala.postfiles(file, headers, true)
 sha1 = postedFile["response"]["sha1"]
+
+#test
 @test response = get(postedFile, "code", "") == 201
 
 #==
-Dépôt d'une donnée
+Dépôt d'une nouvelle donnée.
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  "Content-Type" => "application/json"
-)
+# Dépôt d'un fichier
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+file = "$path/testdata/file.txt"
+postfiles_response = Nakala.postfiles(file, headers, true)
+sha1 = postedFile["response"]["sha1"]
 
+# Création de la donnée
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = Dict(
   :collectionsIds => [],
-  :files => [
-    Dict("name" => "file.txt", "sha1" => sha1, "embargoed" => "2024-09-01")
-  ],
+  :files => [ Dict("name" => "file.txt", "sha1" => sha1, "embargoed" => "2024-09-01") ],
   :status => "pending",
   :metas => [
-    Dict(:value => "title", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "Ma données", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "http://purl.org/coar/resource_type/c_18cf", :propertyUri => "http://nakala.fr/terms#type", :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI"),
-    Dict(:value => Dict(:surname => "unknown", :givenname => "user"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => Dict(:surname => "Rémi", :givenname => "Fassol"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "2024-09-01", :propertyUri => "http://nakala.fr/terms#created", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "PDM", :propertyUri => "http://nakala.fr/terms#license", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict(:value => "Description", :propertyUri => "http://purl.org/dc/terms/description", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
-    Dict(
-      :value => Dict(
-        :surname => "John",
-        :givenname => "Doe"
-      ),
-      :propertyUri => "http://nakala.fr/terms#creator"
-    )
+    Dict( :value => Dict( :surname => "Rémi", :givenname => "Fassol" ), :propertyUri => "http://nakala.fr/terms#creator" )
   ],
   :rights => []
 )
-postedData = Nakala.postdatas(headers, body, true)
-postedData["response"]
-@test postedData["code"] == 201
-identifier = postedData["response"]["payload"]["id"] 
+postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+
+#test
+@test postdatas_response["code"] == 201
+
 
 #==
 Récupération des informations d'une donnée
 ==#
-@test get(Nakala.getdatas(identifier, headers, true), "code", "") == 200
-d = Nakala.getdatas(identifier, headers, true)
+identifier = createData()[:dataIdentifier]
+@test Nakala.Datas.getdatas(identifier, headers, true)["code"] == 200
+
 
 #==
-Modifier les informations d'une donnée
+Modification des informations d'une donnée.
 ==#
-identifier
-headers
+identifier = createData()[:dataIdentifier]
 body = Dict(
   "metas" => [
-    Dict("value" => "New title test", "propertyUri" => "http://nakala.fr/terms#title", "lang" => "fr", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict("value" => "My data", "propertyUri" => "http://nakala.fr/terms#title", "lang" => "en", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
     Dict("value" => "http://purl.org/coar/resource_type/c_18cf", "propertyUri" => "http://nakala.fr/terms#type", "typeUri" => "http://www.w3.org/2001/XMLSchema#anyURI"),
-    Dict(:value => Dict(:surname => "unknown", :givenname => "user"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => Dict(:surname => "Rémi", :givenname => "Fassol"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
     Dict("value" => "2024-09-01", "propertyUri" => "http://nakala.fr/terms#created", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
     Dict("value" => "PDM", "propertyUri" => "http://nakala.fr/terms#license", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
-    Dict("value" => "Description modifiée 2.", "propertyUri" => "http://purl.org/dc/terms/description", "lang" => "fr", "typeUri" => "http://www.w3.org/2001/XMLSchema#string")
+    Dict("value" => "New description.", "propertyUri" => "http://purl.org/dc/terms/description", "lang" => "en", "typeUri" => "http://www.w3.org/2001/XMLSchema#string")
   ]
 )
-@test Nakala.putdatas(identifier, headers, body, true) == 204
+
+@test Nakala.Datas.putdatas(identifier, headers, body, true) == 204
+#Nakala.Datas.getdatas(identifier, headers, true)["response"]["metas"]
 
 
 #==
-Lister les fichiers d'une donnée
+Supprimer une donnée
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
-)
+identifier = createData()[:dataIdentifier]
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 
-@test Nakala.getdatas_files(identifier, headers, true)["code"] == 200
-Nakala.getdatas_files(identifier, headers, true)["response"]
+@test Nakala.Datas.deletedatas(identifier, headers, true) == 204
+
 
 #==
-Ajouter un fichier à une donnée
+Récupération des métadonnées des fichiers associés à une donnée.
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
-)
-file = "/Users/josselinmorvan/files/dh/Nakala.jl/test/file2.txt"
-postedFile = Nakala.postfiles(file, headers, true)
-sha1 = postedFile["response"]["sha1"]
+identifier = createData()[:dataIdentifier]
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+getdatas_files_response = Nakala.Datas.getdatas_files(identifier, headers, true)
+getdatas_files_response["response"]
+@test getdatas_files_response["code"] == 200
 
-
-headers = Dict(
-  "X-API-KEY" => apikey,
-  "Content-Type" => "application/json"
-)
-body = Dict(
-  "description" => "Greetings.",
-  "sha1" => sha1,
-  "embargoed" => "2024-09-01"
-)
-postedDatasFile = Nakala.postdatas_files(identifier, headers, body, true)
-postedDatasFile["response"]
-@test postedDatasFile["code"] == 200
 
 #==
-Supprimer un fichier d'une donnée
+Ajout d'un fichier à une donnée.
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
-)
-fileIdentifier = Nakala.getdatas_files(identifier, headers, true)["response"][2]["sha1"]
-@test Nakala.deletedatas_files(identifier, fileIdentifier, headers, true) == 204
+# création d'une donnée
+identifier = createData()[:dataIdentifier]
+
+# envoi d'un nouveau fichier sur l'espace temporaire
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+file = "$path/testdata/file2.txt"
+postfile_response = Nakala.Datas.postfiles(file, headers, true)
+sha1 = postfile_response["response"]["sha1"]
+
+# ajout du nouveau fichier dans la donnée
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+body = Dict( "description" => "Greetings.", "sha1" => sha1, "embargoed" => "2024-09-01" )
+postdatas_files_reponse = Nakala.Datas.postdatas_files(identifier, headers, body, true)
+
+@test postdatas_files_reponse["code"] == 200
 
 #==
-Récupération de la liste des métadonnées
+Suppression de fichier à une donnée.
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  "Content-Type" => "application/json"
-)
-Nakala.getdatas_metadatas(identifier, headers, true)
-@test Nakala.getdatas_metadatas(identifier, headers, true)["code"] == 200
+# création d'une donnée
+identifier = createData()[:dataIdentifier]
+fileIdentifier = createData()[:fileIdentifier]
+
+# envoi d'un nouveau fichier sur l'espace temporaire
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+file = "$path/testdata/file2.txt"
+postfile_response = Nakala.Datas.postfiles(file, headers, true)
+sha1 = postfile_response["response"]["sha1"]
+
+# ajout du nouveau fichier dans la donnée
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+body = Dict( "description" => "Greetings.", "sha1" => sha1, "embargoed" => "2024-09-01" )
+postdatas_files_reponse = Nakala.Datas.postdatas_files(identifier, headers, body, true)
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+
+# suppression du premier fichier
+deletedatas_files_response = Nakala.Datas.deletedatas_files(identifier, fileIdentifier, headers, true)
+@test deletedatas_files_response == 204
+
+
+#==
+Récupération de la liste des métadonnées d'une donnée.
+==#
+identifier = createData()[:dataIdentifier]
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+getdatas_metadatas_response = Nakala.Datas.getdatas_metadatas(identifier, headers, true)
+@test getdatas_metadatas_response["code"] == 200
+
 
 #==
 Ajout d'une nouvelle métadonnée à une donnée
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
-)
-body = Dict(
-  :value => "title",
-  :propertyUri => "http://nakala.fr/terms#title",
-  :lang => "en",
-  :typeUri => "http://www.w3.org/2001/XMLSchema#string"
-)
-Nakala.postdatas_metadatas(identifier, headers, body, true)
-@test Nakala.postdatas_metadatas(identifier, headers, body, true)["code"] == 201
+identifier = createData()[:dataIdentifier]
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+body = Dict( :value => "My Data", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string" )
+postdatas_metadatas_response = Nakala.Datas.postdatas_metadatas(identifier, headers, body, true)
+
+@test postdatas_metadatas_response["code"] == 201
 
 #==
-Suppression de métadonnées pour une donnée
+Suppression de métadonnées pour une donnée.
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
-)
-body = Dict(
-  :propertyUri => "http://nakala.fr/terms#title",
-  :lang => "en"
-)
-Nakala.deletedatas_metadatas(identifier, headers, body, true)
-@test Nakala.deletedatas_metadatas(identifier, headers, body, true)["code"] == 200
+# création d'une donnée
+identifier = createData()[:dataIdentifier]
 
-Nakala.getdatas_metadatas(identifier, headers, true)["response"]
+# ajout d'une métadonnée (titre en anglais)
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+body = Dict( :value => "My Data", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string" )
+postdatas_metadatas_response = Nakala.Datas.postdatas_metadatas(identifier, headers, body, true)
+
+# suppression de la métadonnée ajoutée
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+body = Dict( :propertyUri => "http://nakala.fr/terms#title", :lang => "en" )
+deletedatas_metadatas_response = Nakala.Datas.deletedatas_metadatas(identifier, headers, body, true)
+
+#test
+@test deletedatas_metadatas_response["code"] == 200
 
 #==
 Récupération de la liste des relations d'une donnée
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  "Content-Type" => "application/json"
-)
-@test Nakala.getdatas_relations(identifier, headers, true)["code"] == 200
+identifier = createData()[:dataIdentifier]
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+getdatas_relations_response = Nakala.Datas.getdatas_relations(identifier, headers, true)
+@test getdatas_relations_response["code"] == 200
 
 #==
 Ajout de relations sur une donnée
 NB la donnée doit être publiée pour qu'on puisse modifier ses relations
 ==#
-identifier
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
+# Dépôt d'un fichier
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+file = "$path/testdata/file.txt"
+postfiles_response = Nakala.postfiles(file, headers, true)
+sha1 = postedFile["response"]["sha1"]
+
+# Création de la donnée publique
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+body = Dict(
+  :collectionsIds => [],
+  :files => [ Dict("name" => "file.txt", "sha1" => sha1, "embargoed" => "2024-09-01") ],
+  :status => "published",
+  :metas => [
+    Dict(:value => "Ma données", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "http://purl.org/coar/resource_type/c_18cf", :propertyUri => "http://nakala.fr/terms#type", :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI"),
+    Dict(:value => Dict(:surname => "Rémi", :givenname => "Fassol"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "2024-09-01", :propertyUri => "http://nakala.fr/terms#created", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "PDM", :propertyUri => "http://nakala.fr/terms#license", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "Description", :propertyUri => "http://purl.org/dc/terms/description", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict( :value => Dict( :surname => "Rémi", :givenname => "Fassol" ), :propertyUri => "http://nakala.fr/terms#creator" )
+  ],
+  :rights => []
 )
-body = [
-  Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "test")
-]
-@test Nakala.postdatas_relations(identifier, headers, body, true)["code"] == 200
+postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+
+# ajout d'une relations
+identifier = postdatas_response["response"]["payload"]["id"]
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+body = [ Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test") ]
+postdatas_relations_response = Nakala.Datas.postdatas_relations(identifier, headers, body, true)
+
+# test
+@test postdatas_relations_response["code"] == 200
 
 #==
 Suppression des relations sur une donnée
 ==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  "Content-Type" => "application/json"
-)
-body = Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "test")
-@test Nakala.deletedatas_relations(identifier, headers, body, true)["code"] == 200
+# Dépôt d'un fichier
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+file = "$path/testdata/file.txt"
+postfiles_response = Nakala.postfiles(file, headers, true)
+sha1 = postedFile["response"]["sha1"]
 
-Nakala.getdatas_relations(identifier, headers, true)
+# Création de la donnée publique
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+body = Dict(
+  :collectionsIds => [],
+  :files => [ Dict("name" => "file.txt", "sha1" => sha1, "embargoed" => "2024-09-01") ],
+  :status => "published",
+  :metas => [
+    Dict(:value => "Ma données", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "http://purl.org/coar/resource_type/c_18cf", :propertyUri => "http://nakala.fr/terms#type", :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI"),
+    Dict(:value => Dict(:surname => "Rémi", :givenname => "Fassol"), :propertyUri => "http://nakala.fr/terms#creator", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "2024-09-01", :propertyUri => "http://nakala.fr/terms#created", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "PDM", :propertyUri => "http://nakala.fr/terms#license", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict(:value => "Description", :propertyUri => "http://purl.org/dc/terms/description", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
+    Dict( :value => Dict( :surname => "Rémi", :givenname => "Fassol" ), :propertyUri => "http://nakala.fr/terms#creator" )
+  ],
+  :rights => []
+)
+postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+
+# ajout d'une relations
+identifier = postdatas_response["response"]["payload"]["id"]
+headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+body = [ Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test") ]
+postdatas_relations_response = Nakala.Datas.postdatas_relations(identifier, headers, body, true)
+
+# suppression de la relation
+headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+body = Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test")
+deletedatas_relations_response = Nakala.Datas.deletedatas_relations(identifier, headers, body, true)
+
+# test
+@test deletedatas_relations_response["code"] == 200
+
 
 #==
+@todo reprendre ici
 récupération des droits sur une donnée
 ==#
 Nakala.getdatas_rights(identifier, headers, true)["response"]
@@ -304,20 +407,3 @@ header = Dict(
 )
 output = "/home/josselin/Téléchargements"
 Nakala.downloaddatas_files(identifier,  output, header, true)
-
-#==
-Supprimer une donnée
-==#
-headers = Dict(
-  "X-API-KEY" => apikey,
-  :accept => "application/json"
-)
-
-@test Nakala.deletedatas(identifier, headers, true) == 204
-
-
-
-
-
-
-

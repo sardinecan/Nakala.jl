@@ -1,3 +1,7 @@
+module Datas
+
+using HTTP, JSON, Downloads
+
 """
 postfiles(file::String, headers::Dict, apiTest::Bool=false)
 
@@ -963,3 +967,5 @@ function downloaddatas_files(identifier::String, outputDir::String, header::Dict
     return "An unexpected error occurred: $(e)"  
   end
 end
+
+end # end module Datas
