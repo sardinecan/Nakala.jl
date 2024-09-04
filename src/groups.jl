@@ -3,9 +3,9 @@ using HTTP, JSON
 
 """
 """
-function getgroups_search(headers::Dict, apiTest=false)
+function getgroups_search(params::Array, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
-  url = joinpath(apiurl, "groups", "search")
+  url = joinpath(apiurl, "groups", "search?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
     query = HTTP.request("GET", url, headers)
