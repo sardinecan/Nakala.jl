@@ -9,4 +9,5 @@ include("./datas.jl")
 include("./vocabularies.jl")
 include("./collections.jl")
 include("./groups.jl")
+include("./users.jl")
 end # module Nakala
