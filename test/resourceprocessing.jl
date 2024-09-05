@@ -8,9 +8,9 @@ apikey = "01234567-89ab-cdef-0123-456789abcdef" #public key for test api
 ==#
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
-file = "$path/file.txt"
-postfiles_response = Nakala.postfiles(file, headers, true)
-sha1 = postfiles_response["response"]["sha1"]
+file = "$path/testdata/file.txt"
+postfiles_response = Nakala.Datas.postfiles(file, headers, true)
+sha1 = postfiles_response["body"]["sha1"]
 
 # création d'une donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
@@ -37,9 +37,9 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.postdatas(headers, body, true)
-identifier = postdatas_response["response"]["payload"]["id"]
+postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+identifier = postdatas_response["body"]["payload"]["id"]
 
 
-getresourceprocessing_response = Nakala.Resourceprocessing.getresourceprocessing(identifier, headers, true)
-@test getresourceprocessing_response["code"] == 200
+getresourceprocessing_response = Nakala.getresourceprocessing(identifier, headers, true)
+@test getresourceprocessing_response["status"] == 200

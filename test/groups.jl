@@ -19,8 +19,8 @@ body = Dict(
   )]
 )
 postgroups_response = Nakala.Groups.postgroups(headers, body, true)
-postgroups_response["response"]["payload"]["id"]
-@test postgroups_response["code"] == 201
+postgroups_response["body"]["payload"]["id"]
+@test postgroups_response["status"] == 201
 
 
 #==
@@ -39,11 +39,11 @@ body = Dict(
   )]
 )
 postgroups_response = Nakala.Groups.postgroups(headers, body, true)
-groupid = postgroups_response["response"]["payload"]["id"]
+groupid = postgroups_response["body"]["payload"]["id"]
 
 # récupération des informations du groupe
 getgroups_response = Nakala.Groups.getgroups(groupid, headers, true)
-@test getgroups_response["response"]["name"] == "Nakala.jl"
+@test getgroups_response["body"]["name"] == "Nakala.jl"
 
 
 #==
@@ -62,7 +62,7 @@ body = Dict(
   )]
 )
 postgroups_response = Nakala.Groups.postgroups(headers, body, true)
-groupid = postgroups_response["response"]["payload"]["id"]
+groupid = postgroups_response["body"]["payload"]["id"]
 
 # modification du groupe
 body = Dict(
@@ -75,8 +75,8 @@ body = Dict(
 putgroups_response = Nakala.Groups.putgroups(groupid, headers, body, true)
 
 getgroups_response = Nakala.Groups.getgroups(groupid, headers, true)
-getgroups_response["response"]["users"]
-@test length(getgroups_response["response"]["users"]) == 3
+getgroups_response["body"]["users"]
+@test length(getgroups_response["body"]["users"]) == 3
 
 
 #==
@@ -94,7 +94,7 @@ params = [
 ]
 getgroups_search_response = Nakala.Groups.getgroups_search(params, headers, true)
 
-@test getgroups_search_response["code"] == 200
+@test getgroups_search_response["status"] == 200
 
 #==
 Suppression d'un groupe d'utilisateurs.
@@ -112,7 +112,7 @@ body = Dict(
   )]
 )
 postgroups_response = Nakala.Groups.postgroups(headers, body, true)
-groupid = postgroups_response["response"]["payload"]["id"]
+groupid = postgroups_response["body"]["payload"]["id"]
 
 # suppression du groupe
 deletegroups_response = Nakala.Groups.deletegroups(groupid, headers, true)

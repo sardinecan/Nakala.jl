@@ -1,5 +1,4 @@
 module Collections
-
 using HTTP
 using JSON
 
@@ -10,26 +9,32 @@ function getcollections(identifier::String, headers::Dict, apiTest=false)
   url = joinpath(apiurl, "collections", identifier)
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("get", url, headers)
+    responsestatus = HTTP.status(response)
+    responsebody = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => responsestatus,
+      "body" => responsebody
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getcollections
 
 """
 """
@@ -38,72 +43,94 @@ function putcollections(identifier::String, headers::Dict, body::Dict, apiTest=f
   url = joinpath(apiurl, "collections", identifier)
   try
     # Envoi de la requête
-    query = HTTP.request("PUT", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    return code
-    
+    response = HTTP.request("PUT", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    return Dict(
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => ""
+    )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
-      return "Request failed with status code $(e.status)"
+      return Dict(
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => ""
+      )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export putcollections
 
 function deletecollections(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier)
   try
     # Envoi de la requête
-    query = HTTP.request("DELETE", url, headers)
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    return code
-    
+    response = HTTP.request("DELETE", url, headers)
+    response_status = HTTP.status(response)
+    return Dict(
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => ""
+    )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
-      return "Request failed with status code $(e.status)"
+      return Dict(
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => ""
+      )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export deletecollections
 
 function postcollections(headers::Dict, body::Dict, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections")
- try
-   # Envoi de la requête
-   query = HTTP.request("post", url, headers, JSON.json(body))
-   code = HTTP.status(query)
-   # response = JSON.parse(String(HTTP.payload(query)))
-   
-   response = JSON.parse(String(HTTP.payload(query)))
-   return Dict(
-     "code" => code,
-     "response" => response
-   )
- catch e
-   # Gestion spécifique des erreurs HTTP
-   if isa(e, HTTP.ExceptionRequest.StatusError)
-     return Dict(
-       "response" => "Request failed with status code $(e.status): $(e.response)",
-       "code" => e.status
-     )
-   else
-     # Gestion des autres types d'erreurs
-     return "An unexpected error occurred: $(e)"
-   end
- end
+  try
+    # Envoi de la requête
+    response = HTTP.request("post", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
+    return Dict(
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
+    )
+  catch e
+    # Gestion spécifique des erreurs HTTP
+    if isa(e, HTTP.ExceptionRequest.StatusError)
+      return Dict(
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
+      )
+    else
+      # Gestion des autres types d'erreurs
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
+    end
+  end
 end
-
+export postcollections
 
 """
 # example
@@ -112,32 +139,36 @@ end
 ```
 """
 function getcollections_datas(identifier::String, params::Array, headers::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "datas?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
-    query = HTTP.request("get", url, headers)
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("get", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getcollections_datas
 
 """
 # example
@@ -145,32 +176,36 @@ end
 ```
 """
 function postcollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "datas")
   try
     # Envoi de la requête
-    query = HTTP.request("post", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("post", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export postcollections_datas
 
 """
 # example
@@ -178,32 +213,37 @@ end
 ```
 """
 function deletecollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "datas")
   try
     # Envoi de la requête
-    query = HTTP.request("delete", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("delete", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export deletecollections_datas
+
 
 """
 # example
@@ -211,32 +251,37 @@ end
 ```
 """
 function getcollections_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "metadatas")
   try
     # Envoi de la requête
-    query = HTTP.request("get", url, headers)
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("get", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getcollections_metadatas
+
 
 """
 # example
@@ -244,32 +289,37 @@ end
 ```
 """
 function postcollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "metadatas")
   try
     # Envoi de la requête
-    query = HTTP.request("post", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("post", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export postcollections_metadatas
+
 
 """
 # example
@@ -277,32 +327,36 @@ end
 ```
 """
 function deletecollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "metadatas")
   try
     # Envoi de la requête
-    query = HTTP.request("delete", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("delete", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export deletecollections_metadatas
 
 """
 # example
@@ -310,32 +364,36 @@ end
 ```
 """
 function getcollections_rights(identifier::String, headers::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "rights")
   try
     # Envoi de la requête
-    query = HTTP.request("get", url, headers)
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("get", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getcollections_rights
 
 """
 # example
@@ -343,32 +401,37 @@ end
 ```
 """
 function postcollections_rights(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "rights")
   try
     # Envoi de la requête
-    query = HTTP.request("post", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("post", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export postcollections_rights
+
 
 """
 # example
@@ -376,32 +439,37 @@ end
 ```
 """
 function deletecollections_rights(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "rights")
   try
     # Envoi de la requête
-    query = HTTP.request("delete", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("delete", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export deletecollections_rights
+
 
 """
 # example
@@ -409,32 +477,37 @@ end
 ```
 """
 function getcollections_status(identifier::String, headers::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "status")
   try
     # Envoi de la requête
-    query = HTTP.request("get", url, headers)
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("get", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getcollections_status
+
 
 """
 # example
@@ -442,25 +515,34 @@ end
 ```
 """
 function putcollections_status(identifier::String, status::String, headers::Dict, apiTest::Bool=false)
-   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "status", status)
   try
     # Envoi de la requête
-    query = HTTP.request("put", url, headers)
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    
-    #response = JSON.parse(String(HTTP.payload(query)))
-    return code
+    response = HTTP.request("put", url, headers)
+    response_status = HTTP.status(response)
+    return Dict(
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => ""
+    )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
-      return e.status
+      return Dict(
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => ""
+      )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export putcollections_status
 
 end # end module

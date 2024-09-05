@@ -1,5 +1,4 @@
 module Users
-
 using HTTP
 using JSON
 
@@ -10,26 +9,33 @@ function getusers_me(headers::Dict, apiTest=false)
   url = joinpath(apiurl, "users", "me")
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("GET", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getusers_me
+
 
 """
 """
@@ -38,21 +44,32 @@ function putusers_me(headers::Dict, body::Dict, apiTest=false)
   url = joinpath(apiurl, "users", "me")
   try
     # Envoi de la requête
-    query = HTTP.request("PUT", url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    # response = JSON.parse(String(HTTP.payload(query)))
-    return code
-    
+    response = HTTP.request("PUT", url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    return Dict(
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => ""
+    )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
-      return "Request failed with status code $(e.status)"
+      return Dict(
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => ""
+      )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export putusers_me
+
 
 """
 """
@@ -61,23 +78,33 @@ function putusers_me_apikey(headers::Dict, apiTest=false)
   url = joinpath(apiurl, "users", "me", "apikey")
   try
     # Envoi de la requête
-    query = HTTP.request("PUT", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("PUT", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
-      return "Request failed with status code $(e.status): $(e.response)"
+      return Dict(
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
+      )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export putusers_me_apikey
+
 
 """
 """
@@ -86,26 +113,32 @@ function postusers_datas(scope::String, headers::Dict, body::Dict, apiTest::Bool
   url = joinpath(apiurl, "users", "datas", scope)
 
   try
-    query = HTTP.post(url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.post(url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export postusers_datas
 
 
 """
@@ -115,104 +148,132 @@ function getusers_datas_datatypes(params::Array, headers::Dict, apiTest=false)
   url = joinpath(apiurl, "users", "datas", "datatypes?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("GET", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getusers_datas_datatypes
+
 
 function getusers_datas_createdyears(params::Array, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "datas", "createdyears?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("GET", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getusers_datas_createdyears
+
 
 function getusers_datas_statuses(params::Array, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "datas", "statuses?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("GET", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getusers_datas_statuses
+
 
 function getusers_groups(scope::String, params::Array, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "groups", scope*"?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("GET", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getusers_groups
+
 
 """
 """
@@ -221,77 +282,98 @@ function postusers_collections(scope::String, headers::Dict, body::Dict, apiTest
   url = joinpath(apiurl, "users", "collections", scope)
 
   try
-    query = HTTP.post(url, headers, JSON.json(body))
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.post(url, headers, JSON.json(body))
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export postusers_collections
+
 
 function getusers_collections_createdyears(params::Array, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "collections", "createdyears?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("GET", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getusers_collections_createdyears
+
 
 function getusers_collections_statuses(params::Array, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "collections", "statuses?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
-    query = HTTP.request("GET", url, headers)
-    code = HTTP.status(query)
-    response = JSON.parse(String(HTTP.payload(query)))
+    response = HTTP.request("GET", url, headers)
+    response_status = HTTP.status(response)
+    response_body = JSON.parse(String(HTTP.payload(response)))
     return Dict(
-      "code" => code,
-      "response" => response
+      "isSuccess" => true,
+      "status" => response_status,
+      "body" => response_body
     )
   catch e
     # Gestion spécifique des erreurs HTTP
     if isa(e, HTTP.ExceptionRequest.StatusError)
       return Dict(
-        "response" => "Request failed with status code $(e.status): $(e.response)",
-        "code" => e.status
+        "isSuccess" => false,
+        "status" => e.status,
+        "body" => e.response
       )
     else
       # Gestion des autres types d'erreurs
-      return "An unexpected error occurred: $(e)"
+      return Dict(
+        "isSuccess" => false,
+        "message" => "An unexpected error occurred: $(e)"
+      )
     end
   end
 end
+export getusers_collections_statuses
 
-end
+
+end # end module
