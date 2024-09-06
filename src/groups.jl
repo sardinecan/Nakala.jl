@@ -2,7 +2,15 @@ module Groups
 using HTTP
 using JSON
 
+
 """
+    getgroups_search(params::Array, headers::Dict, apiTest=false)
+
+
+
+# exemple
+```julia-repl
+```
 """
 function getgroups_search(params::Array, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -38,6 +46,13 @@ export getgroups_search
 
 
 """
+    getgroups(identifier::String, headers::Dict, apiTest=false)
+
+
+
+# exemple
+```julia-repl
+```
 """
 function getgroups(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -73,6 +88,13 @@ export getgroups
 
 
 """
+    putgroups(identifier::String, headers::Dict, body::Dict, apiTest=false)
+
+
+
+# exemple
+```julia-repl
+```
 """
 function putgroups(identifier::String, headers::Dict, body::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -106,6 +128,15 @@ end
 export putgroups
 
 
+"""
+    deletegroups(identifier::String, headers::Dict, apiTest=false)
+
+
+
+# exemple
+```julia-repl
+```
+"""
 function deletegroups(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "groups", identifier)
@@ -138,6 +169,15 @@ end
 export deletegroups
 
 
+"""
+    postgroups(headers::Dict, body::Dict, apiTest::Bool=false)
+
+
+
+# exemple
+```julia-repl
+```
+"""
 function postgroups(headers::Dict, body::Dict, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "groups")

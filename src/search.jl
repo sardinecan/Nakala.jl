@@ -3,27 +3,13 @@ using HTTP
 using JSON
 
 """
-  searchAuthors(params::Array, apiTest::Bool=false)
+    search_authors(params::Array, apiTest::Bool=false)
 
-Retourne des auteurs associés aux données de Nakala en fonction de critères de recherche.
+Récupération des auteurs associés aux données de Nakala.
 
-- q::string : mot clé pour la recherche
-- order::String="asc" : sens du tri (basé le prénom puis le nom de famille)
-- page::Int=1 : page courante
-- limit::Int=100 : Nombre de résultats par page
-- searchOperator::String="" : Permet de selectionner la recherche en début, fin ou contenu dans l'élément (start, end, partial(default))
--searchField::String="" : Permet de sélectionner le champ de recherche (surname, givenname, orcid, all(default))
-
-param = [
-:q => "String",
-:order => "asc(default)|desc",
-:page => 1(default),
-:limit => 10(default),
-:searchOperator => "start|end|partial(default)",
-:searchField => "surname|givenname|orcid|all(default)"
-]
-
-- apiTest::Bool=false : permet de lancer la requête sur l'api test de Nakala
+# exemple
+```julia-repl
+```
 """
 function search_authors(params::Array, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -60,17 +46,13 @@ export search_authors
 
 
 """
-search(q::String, apiTest::Bool=false)
+    search(params::Array, apiTest::Bool=false)
 
-Retourne des données Nakala en fonction de critères de recherche
+Recherche des données Nakala.
 
-- apiTest::Bool=false : permet de lancer la requête sur l'api test de Nakala
-param = [
-:q => "String",
-:fq => "scope=collection;status=public;year=2009,1889",
-:facet => "type,size=17,sort=item,order=asc;fileExt,size=7,sort=count,order=desc",
-:order => "relevance ou date,desc ou date,asc ou title,desc ou title,asc"
-]
+# exemple
+```julia-repl
+```
 """
 function search(params::Array, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  

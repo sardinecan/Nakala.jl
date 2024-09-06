@@ -2,7 +2,15 @@ module Resourceprocessing
 using HTTP
 using JSON
 
+"""
+    getresourceprocessing(identifier::String, headers::Dict, apiTest=false)
 
+État d'une ressource dans ElasticSearch et Datacite.
+
+# exemple
+```julia-repl
+```
+"""
 function getresourceprocessing(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "resourceprocessing", identifier)

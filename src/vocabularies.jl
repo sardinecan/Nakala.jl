@@ -1,12 +1,12 @@
 module Vocabularies
 
-"""
-# example
 
-params = [
-"q" => "public",
-"response_status" => "PDM"
-]
+"""
+    getvocabularies_licenses(params::Array, apiTest::Bool=false)
+
+Récupération des licences des données de Nakala.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -43,14 +43,15 @@ function getvocabularies_licenses(params::Array, apiTest::Bool=false)
 end
 export getvocabularies_licenses
 
+
 """
-params = [
-q => "Fran",
-response_status => "fr",
-order => "asc",
-page => 1,
-limit => 20,
-]
+    getvocabularies_languages(params::Array, apiTest::Bool=false)
+
+Récupération des langues des métadonnées.
+
+# exemple
+```julia-repl
+```
 """
 function getvocabularies_languages(params::Array, apiTest::Bool=false)
   # @todo problème avec les caractères spéciaux, malgré l'utilisation de escapeuri
@@ -87,6 +88,15 @@ end
 export getvocabularies_languages
 
 
+"""
+    getvocabularies_countryCodes(params::Array, apiTest::Bool=false)
+
+Récupération des codes pays ISO 3166 (alpha-2).
+
+# exemple
+```julia-repl
+```
+"""
 function getvocabularies_countryCodes(params::Array, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "countryCodes?") * HTTP.URIs.escapeuri(params)
@@ -122,6 +132,15 @@ end
 export getvocabularies_countryCodes
 
 
+"""
+    getvocabularies_dataStatuses(apiTest::Bool=false)
+
+Récupération des statuts des données de Nakala.
+
+# exemple
+```julia-repl
+```
+"""
 function getvocabularies_dataStatuses(apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "dataStatuses")
@@ -157,6 +176,15 @@ end
 export getvocabularies_dataStatuses
 
 
+"""
+    getvocabularies_collectionStatuses(apiTest::Bool=false)
+
+Récupération des statuts des collections de Nakala.
+
+# exemple
+```julia-repl
+```
+"""
 function getvocabularies_collectionStatuses(apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "collectionStatuses")
@@ -192,6 +220,15 @@ end
 export getvocabularies_collectionStatuses
 
 
+"""
+    getvocabularies_datatypes(apiTest::Bool=false)
+
+Récupération des types des données de Nakala.
+
+# exemple
+```julia-repl
+```
+"""
 function getvocabularies_datatypes(apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "datatypes")
@@ -227,6 +264,15 @@ end
 export getvocabularies_datatypes
 
 
+"""
+    getvocabularies_properties(apiTest::Bool=false)
+
+Récupération des propriétés des métadonnées.
+
+# exemple
+```julia-repl
+```
+"""
 function getvocabularies_properties(apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "properties")
@@ -262,6 +308,15 @@ end
 export getvocabularies_properties
 
 
+"""
+    getvocabularies_metadatatypes(apiTest::Bool=false)
+
+Récupération des types des métadonnées.
+
+# exemple
+```julia-repl
+```
+"""
 function getvocabularies_metadatatypes(apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "metadatatypes")
@@ -298,7 +353,11 @@ export getvocabularies_metadatatypes
 
 
 """
-# example
+    getvocabularies_dcmitypes(apiTest::Bool=false)
+
+Récupération des types DCMI.
+
+# exemple
 ```julia-repl
 ```
 """

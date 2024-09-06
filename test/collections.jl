@@ -101,8 +101,8 @@ getcollections_response = Nakala.Collections.getcollections(identifier, headers,
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postfiles_response = Nakala.postfiles(file, headers, true)
-sha1 = postfiles_response["body"]["sha1"]
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # création d'une donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
@@ -162,8 +162,8 @@ postcollections_datas_response = Nakala.Collections.postcollections_datas(identi
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postfiles_response = Nakala.postfiles(file, headers, true)
-sha1 = postfiles_response["body"]["sha1"]
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # création d'une donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
@@ -228,8 +228,8 @@ getcollections_datas_response["body"]["data"][1]["identifier"]
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postfiles_response = Nakala.postfiles(file, headers, true)
-sha1 = postfiles_response["body"]["sha1"]
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # création d'une donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )

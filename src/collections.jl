@@ -3,6 +3,18 @@ using HTTP
 using JSON
 
 """
+    getcollections(identifier::String, headers::Dict, apiTest=false)
+
+Récupération des informations sur une collection.
+
+# exemple
+```julia-repl
+julia> getcollections(identifier, headers, true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("haveAccessibleData"=>false, "websitePrefix"=>"", "isDepositor"=>true, "isOwner"=>true, "depositor"=>Dic…
+  "status"    => 200
+  "isSuccess" => true
+```
 """
 function getcollections(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -37,6 +49,13 @@ end
 export getcollections
 
 """
+    putcollections(identifier::String, headers::Dict, body::Dict, apiTest=false)
+
+Modification des informations d'une collection.
+
+# exemple
+```julia-repl
+```
 """
 function putcollections(identifier::String, headers::Dict, body::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -69,6 +88,16 @@ function putcollections(identifier::String, headers::Dict, body::Dict, apiTest=f
 end
 export putcollections
 
+
+"""
+    deletecollections(identifier::String, headers::Dict, apiTest=false)
+
+Suppression d'une collection.
+
+# exemple
+```julia-repl
+```
+"""
 function deletecollections(identifier::String, headers::Dict, apiTest=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier)
@@ -100,6 +129,16 @@ function deletecollections(identifier::String, headers::Dict, apiTest=false)
 end
 export deletecollections
 
+
+"""
+    postcollections(headers::Dict, body::Dict, apiTest::Bool=false)
+
+Création d'une nouvelle collection.
+
+# exemple
+```julia-repl
+```
+"""
 function postcollections(headers::Dict, body::Dict, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections")
@@ -132,10 +171,14 @@ function postcollections(headers::Dict, body::Dict, apiTest::Bool=false)
 end
 export postcollections
 
-"""
-# example
-```julia-repl
 
+"""
+    getcollections_datas(identifier::String, params::Array, headers::Dict, apiTest::Bool=false)
+
+Récupération de la liste paginée des données contenues dans la collection.
+
+# exemple
+```julia-repl
 ```
 """
 function getcollections_datas(identifier::String, params::Array, headers::Dict, apiTest::Bool=false)
@@ -170,8 +213,13 @@ function getcollections_datas(identifier::String, params::Array, headers::Dict, 
 end
 export getcollections_datas
 
+
 """
-# example
+    postcollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Ajout d'une liste de données dans une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -208,7 +256,11 @@ end
 export postcollections_datas
 
 """
-# example
+    deletecollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Suppression d'une liste de données d'une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -246,7 +298,11 @@ export deletecollections_datas
 
 
 """
-# example
+    getcollections_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération des métadonnées d'une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -284,7 +340,11 @@ export getcollections_metadatas
 
 
 """
-# example
+    postcollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+
+Ajout d'une nouvelle métadonnée à une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -322,7 +382,11 @@ export postcollections_metadatas
 
 
 """
-# example
+    deletecollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+
+Suppression de métadonnées pour une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -359,7 +423,11 @@ end
 export deletecollections_metadatas
 
 """
-# example
+    getcollections_rights(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération des utilisateurs et des groupes ayant des droits sur la collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -395,8 +463,13 @@ function getcollections_rights(identifier::String, headers::Dict, apiTest::Bool=
 end
 export getcollections_rights
 
+
 """
-# example
+    postcollections_rights(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Ajout de droits sur une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -434,7 +507,11 @@ export postcollections_rights
 
 
 """
-# example
+    deletecollections_rights(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+
+Suppression des droits pour utilisateur ou un groupe d'utilisateurs sur une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -472,7 +549,11 @@ export deletecollections_rights
 
 
 """
-# example
+    getcollections_status(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération du statut d'une collection.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -510,7 +591,11 @@ export getcollections_status
 
 
 """
-# example
+    putcollections_status(identifier::String, status::String, headers::Dict, apiTest::Bool=false)
+
+Changement du statut d'une collection.
+
+# exemple
 ```julia-repl
 ```
 """

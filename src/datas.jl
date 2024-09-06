@@ -3,25 +3,17 @@ using HTTP
 using JSON
 using Downloads
 
+
 """
-postfiles(file::String, headers::Dict, apiTest::Bool=false)
+    postdatas_uploads(file::String, headers::Dict, apiTest::Bool=false)
 
-Permet de déposer une donnée dans Nakala.
-Les fichiers associés à la donnée sont à déposer avant via POST /uploads.
+Dépôt de fichier.
 
-# example
+# exemple
 ```julia-repl
-julia> headers = Dict(
-"X-API-KEY" => apikey,
-:accept => "application/json"
-)
-
-julia> file = "/Users/josselinmorvan/files/dh/Nakala.jl/test/file.txt"
-
-julia> postfiles(file, headers)
 ```
 """
-function postfiles(file::String, headers::Dict, apiTest::Bool=false)
+function postdatas_uploads(file::String, headers::Dict, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", "uploads")
 
@@ -54,17 +46,16 @@ function postfiles(file::String, headers::Dict, apiTest::Bool=false)
     end
   end
 end
-export postfiles
+export postdatas_uploads
+
 
 """
+    postdatas_files(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
 
 Ajout d'un fichier à une donnée.
 
-Permet d'ajouter un fichier à une donnée. Attention, le fichier doit être déposé avant à l'aide de la requête POST /uploads.
-
-# example 
+# exemple
 ```julia-repl
-
 ```
 """
 function postdatas_files(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
@@ -99,7 +90,15 @@ function postdatas_files(identifier::String, headers::Dict, body::Dict, apiTest:
 end
 export postdatas_files
 
+
 """
+    deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict, apiTest::Bool=false)
+
+Suppression de fichier à une donnée.
+
+# exemple
+```julia-repl
+```
 """
 function deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict, apiTest::Bool=false)
   apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -134,38 +133,12 @@ export deletedatas_files
 
 
 """
-postdatas(headers, body, apiTest=false)
+    postdatas(headers::Dict, body::Dict, apiTest=false)
 
-Permet de déposer une donnée dans Nakala
-Les fichiers associés à la donnée sont à déposer avant via POST /uploads
+Dépôt d'une nouvelle donnée.
 
-Les identifiants sha1 sont fournis lors du dépôt des fichiers. 
-
-Les métadonnées title, type, licence, description, et date de création sont obligatoires.
-# Example
+# exemple
 ```julia-repl
-julia> headers = Dict(
-"X-API-KEY" => apikey,
-"Content-Type" => "application/json"
-)
-
-julia> body = Dict(
-:collectionsIds => [],
-:files => [
-Dict("name" => "file.txt", "sha1" => sha1, "embargoed" => "2024-09-01")
-],
-:status => "pending",
-:metas => [
-Dict(:value => "test", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
-Dict(:value => "http://purl.org/coar/resource_type/c_18cf", :propertyUri => "http://nakala.fr/terms#type", :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI"),
-Dict(:value => "2024-09-01", :propertyUri => "http://nakala.fr/terms#created", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
-Dict(:value => "PDM", :propertyUri => "http://nakala.fr/terms#license", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),
-Dict(:value => "Description", :propertyUri => "http://purl.org/dc/terms/description", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string")
-],
-:rights => []
-)
-
-julia> postdatas(headers, body)
 ```
 """
 function postdatas(headers::Dict, body::Dict, apiTest=false)
@@ -202,19 +175,12 @@ export postdatas
 
 
 """
-getdatas(identifiers, headers, apiTest=false)
+    getdatas(identifier::String, headers::Dict, apiTest=false)
 
 Récupération des informations sur une donnée.
 
-# Examples
+# exemple
 ```julia-repl
-julia> headers = Dict(
-"X-API-KEY" => "01234567-89ab-cdef-0123-456789abcdef",
-"Content-Type" => "application/json"
-)
-julia> identifier =  "10.34847/nkl.12345678"
-
-julia> Nakala.getDatas(headers, identifier)
 ```
 """
 function getdatas(identifier::String, headers::Dict, apiTest=false)
@@ -251,19 +217,12 @@ export getdatas
 
 
 """
-getdatas_version(identifier, headers, apiTest=false)
+    getdatas_version(identifier::String, headers::Dict, apiTest=false)
 
-Récupération des informations sur une donnée.
+Récupération de la liste des versions d'une donnée.
 
-# Examples
+# exemple
 ```julia-repl
-julia> headers = Dict(
-"X-API-KEY" => "01234567-89ab-cdef-0123-456789abcdef",
-"Content-Type" => "application/json"
-)
-julia> identifier =  "10.34847/nkl.12345678"
-
-julia> Nakala.getDatas(headers, identifier)
 ```
 """
 function getdatas_version(identifier::String, headers::Dict, apiTest=false)
@@ -298,33 +257,14 @@ function getdatas_version(identifier::String, headers::Dict, apiTest=false)
 end
 export getdatas_version
 
+
 """
-putdatas(identifier, headers, body, apiTest=false)
+    putdatas(identifier::String, headers::Dict, body::Dict, apiTest=false)
 
 Modification des informations d'une donnée.
 
-NB : les métadonnées title, type, licence, description et created sont obligatoires.
-
-# Example
+# exemple
 ```julia-repl
-julia> identifier =  "10.34847/nkl.12345678"
-
-julia> headers = Dict(
-"X-API-KEY" => "01234567-89ab-cdef-0123-456789abcdef",
-"Content-Type" => "application/json"
-)
-
-julia> body = Dict(
-"metas" => [
-Dict("value" => "New title", "propertyUri" => "http://nakala.fr/terms#title", "lang" => "fr", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
-Dict("value" => "http://purl.org/coar/resource_type/c_18cf", "propertyUri" => "http://nakala.fr/terms#type", "typeUri" => "http://www.w3.org/2001/XMLSchema#anyURI"),
-Dict("value" => "2024-09-01", "propertyUri" => "http://nakala.fr/terms#created", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
-Dict("value" => "PDM", "propertyUri" => "http://nakala.fr/terms#license", "typeUri" => "http://www.w3.org/2001/XMLSchema#string"),
-Dict("value" => "Modified description.", "propertyUri" => "http://purl.org/dc/terms/description", "lang" => "fr", "typeUri" => "http://www.w3.org/2001/XMLSchema#string")
-]
-)
-
-julia> putdatas(identifier, headers, body, true)
 ```
 """
 function putdatas(identifier::String, headers::Dict, body::Dict, apiTest=false)
@@ -360,22 +300,12 @@ export putdatas
 
 
 """
-deletedatas(identifier, headers, apiTest=false)
+    deletedatas(identifier::String, headers::Dict, apiTest=false)
 
 Suppression d'une donnée.
 
-La suppression d'une donnée est autorisée uniquement si la donnée n'est pas publiée.
-
-# Example
+# exemple
 ```julia-repl
-julia> identifier =  "10.34847/nkl.12345678"
-
-julia> headers = Dict(
-"X-API-KEY" => "01234567-89ab-cdef-0123-456789abcdef",
-:accept => "application/json"
-)
-
-julia> deletedatas(identifier, headers)
 ```
 """
 function deletedatas(identifier::String, headers::Dict, apiTest=false)
@@ -411,21 +341,12 @@ export deletedatas
 
 
 """
- getdatas_files (identifier::String, headers::Dict, apiTest::Bool=false)
+    getdatas_files(identifier::String, headers::Dict, apiTest::Bool=false)
 
-Permet d'obtenir l'ensemble des informations sur les fichiers associés à une donnée. Pour accéder à la version spécifique d'une donnée, vous pouvez ajouter un numéro de version après l'identifiant de la donnée (ex: 10.34847/nkl.eabbbf68.v2 donne accès à la version 2 de la donnée 10.34847/nkl.eabbbf68)
+Récupération des métadonnées des fichiers associés à une donnée.
 
-# example
+# exemple
 ```julia-repl
-julia> identifier = 
-
-julia> headers = Dict(
-"X-API-KEY" => apikey,
-:accept => "application/json"
-)
-
-julia> getDatasFiles (identifier, headers)
-
 ```
 """
 function getdatas_files(identifier::String, headers::Dict, apiTest::Bool=false)
@@ -460,8 +381,13 @@ function getdatas_files(identifier::String, headers::Dict, apiTest::Bool=false)
 end
 export getdatas_files
 
+
 """
-# example
+    getdatas_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération de la liste des métadonnées d'une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -499,7 +425,11 @@ export getdatas_metadatas
 
 
 """
-# example
+    postdatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+
+Suppression de métadonnées pour une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -537,7 +467,11 @@ export postdatas_metadatas
 
 
 """
-# example
+    deletedatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+
+Suppression de métadonnées pour une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -575,7 +509,11 @@ export deletedatas_metadatas
 
 
 """
-# example
+    getdatas_relations(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération de la liste des relations d'une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -613,7 +551,11 @@ export getdatas_relations
 
 
 """
-# example
+    postdatas_relations(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Ajout de relations sur une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -651,7 +593,11 @@ export postdatas_relations
 
 
 """
-# example
+    deletedatas_relations(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+
+Suppression des relations sur une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -689,7 +635,11 @@ export deletedatas_relations
 
 
 """
-# example
+    getdatas_rights(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération des groupes et des utilisateurs ayant des droits sur la donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -727,7 +677,11 @@ export getdatas_rights
 
 
 """
-# example
+    postdatas_rights(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Ajout de droits sur une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -765,7 +719,11 @@ export postdatas_rights
 
 
 """
-# example
+    deletedatas_rights(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+
+Suppression des droits pour un utilisateur ou un groupe d'utilisateurs sur une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -803,7 +761,11 @@ export deletedatas_rights
 
 
 """
-# example
+    getdatas_collections(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération de la liste des collections contenant la donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -841,7 +803,11 @@ export getdatas_collections
 
 
 """
-# example
+    postdatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Ajout d'une donnée dans un ensemble de collections.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -879,7 +845,11 @@ export postdatas_collections
 
 
 """
-# example
+    putdatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Remplacement de l'ensemble des collections d'une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -916,7 +886,11 @@ export putdatas_collections
 
 
 """
-# example
+    deletedatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+
+Suppression d'une donnée d'un ensemble de collections.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -954,7 +928,11 @@ export deletedatas_collections
 
 
 """
-# example
+    getdatas_status(identifier::String, headers::Dict, apiTest::Bool=false)
+
+Récupération du statut d'une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -992,7 +970,11 @@ export getdatas_status
 
 
 """
-# example
+    putdatas_status(identifier::String, status::String, headers::Dict, apiTest::Bool=false)
+
+Changement du statut d'une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -1029,7 +1011,11 @@ export putdatas_status
 
 
 """
-# example
+    getdatas_uploads(headers::Dict, apiTest::Bool=false)
+
+Récupération pour un utilisateur de la liste des objets fichiers déposés non encore associés à une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
@@ -1067,7 +1053,11 @@ export getdatas_uploads
 
 
 """
-# example
+    deletedatas_uploads(fileIdentifier::String, headers::Dict, apiTest::Bool=false)
+
+Suppression d'un fichier déposé dans l'espace temporaire
+
+# exemple
 ```julia-repl
 ```
 """
@@ -1104,7 +1094,11 @@ export deletedatas_uploads
 
 
 """
-# example
+    downloaddatas_files(identifier::String, outputDir::String, header::Dict, apiTest::Bool=false)
+
+Téléchargement des fichiers déposés associés à une donnée.
+
+# exemple
 ```julia-repl
 ```
 """
