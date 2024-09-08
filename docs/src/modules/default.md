@@ -1,5 +1,5 @@
 # Default
 
 ```@autodocs
-Modules = [Nakala.Datas]
+Modules = [Nakala.Default]
 ```
