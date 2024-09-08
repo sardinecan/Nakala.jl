@@ -22,6 +22,11 @@ Les fonctions retournent généralement un dictionnaire qui contient les entrée
 
 La gestion des erreurs repose sur l'utilisation de `try/catch` afin de traiter les exceptions. Les erreurs HTTP (renvoyant un code et un message explicatif) sont distinguées des autres types d'erreurs, comme les échecs de connexion par exemple. Cette approche autorise une gestion efficace et claire des erreurs, facilitant ainsi la résolution des problèmes.
 
+<!-- @todo 
+    faire un point sur le paramètre de l'apiTest 
+    prise en charge XML
+-->
+
 ## Liens et lectures utiles
 
 - La [documentation Nakala](https://documentation.huma-num.fr/nakala/) en ligne ;
