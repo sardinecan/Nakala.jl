@@ -12,7 +12,16 @@ Il est constitué de 7 modules correspondant aux *end-points* de l'API :
 - Vocabularies
 - Default
 
-## Liens utiles
+Les fonctions prennent, en général, 3 ou 4 paramètres, qui sont le plus souvent :
+
+- l’identifiant de la donnée, de la collections ou du groupe recherché ;
+- un headers contenant une clé api Nakala, le type de données envoyées et, pour certaines opérations, le type des données acceptées en retour ;
+- un body, composé de données formatées en JSON ;
+- l'api ciblée pour la requête (api test ou production).
+
+
+
+## Liens et lectures utiles
 
 - La [documentation Nakala](https://documentation.huma-num.fr/nakala/) en ligne ;
 - [interface web](https://nakala.fr/) et [API](https://api.nakala.fr/doc) de production ;
