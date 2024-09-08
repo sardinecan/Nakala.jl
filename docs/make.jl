@@ -4,6 +4,7 @@ makedocs(;
     format = Documenter.HTML(;
         prettyurls = get(ENV, "CI", nothing) == "true"
     ),
+    authors = "J. Morvan <morvan.josselin@gmail.com>"
     pages = [
         "Nakala.jl" => "index.md",
         "Modules" => [
