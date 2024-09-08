@@ -1,8 +1,14 @@
 # Nakala.jl
 
-Nakala est un entrepôt de données de recherche pour les Sciences Humaines et Sociales. Nakala.jl est un package Julia permettant d’interagir avec l’[API Nakala](https://api.nakala.fr/doc).
+Le package Nakala.jl est une bibliothèque Julia conçue pour interagir avec l'[API](https://fr.wikipedia.org/wiki/Interface_de_programmation) de Nakala, une plateforme dédiée à la gestion, au stockage et au partage des données de la recherche pour les sciences humaines et sociales. 
 
-Il est constitué de 7 modules correspondant aux *end-points* de l'API :
+Nakala.jl propose aux utilisateurs d’intégrer facilement les fonctionnalités de Nakala dans leurs flux de travail :
+
+- Nakala.jl facilite l'accès à l'API pour déposer, publier, gérer et télécharger des jeux de données ;
+- ce package est particulièrement utile pour manipuler des ensembles de données volumineux ;
+- il s'adresse principalement aux ingénieurs et chercheurs disposant d'un accès à Nakala, et souhaitant partager et publier leurs données dans le respect des principes [*FAIR*](https://fr.wikipedia.org/wiki/Fair_data) 
+
+Nakala.jl est construit autour de 7 modules correspondant aux *end-points* de l'API :
 
 - Search
 - Datas
@@ -12,14 +18,13 @@ Il est constitué de 7 modules correspondant aux *end-points* de l'API :
 - Vocabularies
 - Default
 
-Les fonctions prennent, en général, 3 ou 4 paramètres, qui sont le plus souvent :
+Les fonctions retournent généralement un dictionnaire qui contient les entrées suivantes :
 
-- l’identifiant de la donnée, de la collections ou du groupe recherché ;
-- un headers contenant une clé api Nakala, le type de données envoyées et, pour certaines opérations, le type des données acceptées en retour ;
-- un body, composé de données formatées en JSON ;
-- l'api ciblée pour la requête (api test ou production).
+- `isSuccess` (`true`|`false`), indiquant si l'opération a réussi ou échoué ;
+- `status`, le code de statut HTTP renvoyé par l'API Nakala, afin savoir si la requête a été traitée correctement (par exemple, `200` pour succès, `404` pour une ressource non trouvée, ou `500` pour une erreur serveur) ;
+- `body`, le corps de la réponse renvoyée par l'API, qui peut inclure des métadonnés ou un message d'erreur détaillé en cas d'échec.
 
-
+La gestion des erreurs repose sur l'utilisation de `try/catch` afin de traiter les exceptions. Les erreurs HTTP (renvoyant un code et un message explicatif) sont distinguées des autres types d'erreurs, comme les erreurs liées aux fichiers ou aux connexions. Cette approche autorise une gestion efficace et claire des erreurs, facilitant ainsi la résolution des problèmes.
 
 ## Liens et lectures utiles
 
