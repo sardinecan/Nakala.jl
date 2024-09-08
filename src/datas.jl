@@ -2,6 +2,7 @@ module Datas
 using HTTP
 using JSON
 using Downloads
+import ..Utilities: contains_key_value
 
 
 """
@@ -190,7 +191,13 @@ function getdatas(identifier::String, headers::Dict, apiTest=false)
     # Envoi de la requête
     response = HTTP.request("GET", url, headers)
     response_status = HTTP.status(response)
-    response_body = JSON.parse(String(HTTP.payload(response)))
+    if contains_key_value(headers, "Accept", "application/xml")
+      response_body = """
+        $(String(HTTP.payload(response)))
+      """
+    else
+      response_body = JSON.parse(String(HTTP.payload(response)))
+    end
     return Dict(
       "isSuccess" => true,
       "status" => response_status,
@@ -1115,6 +1122,5 @@ function downloaddatas_files(identifier::String, outputDir::String, header::Dict
   end
 end
 export downloaddatas_files
-
 
 end # end module Datas

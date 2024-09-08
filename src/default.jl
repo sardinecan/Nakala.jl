@@ -1,4 +1,4 @@
-module Resourceprocessing
+module Default
 using HTTP
 using JSON
 

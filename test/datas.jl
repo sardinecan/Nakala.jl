@@ -1,6 +1,7 @@
 using Test
 using JSON
 using Downloads
+using Nakala.Utilities
 
 path = @__DIR__
 apikey = "01234567-89ab-cdef-0123-456789abcdef" # tnakala user public key for Nakala test api
