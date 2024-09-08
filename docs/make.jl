@@ -4,7 +4,7 @@ makedocs(;
     format = Documenter.HTML(;
         prettyurls = get(ENV, "CI", nothing) == "true"
     ),
-    authors = "J. Morvan <morvan.josselin@gmail.com>"
+    authors = "J. Morvan <morvan.josselin@gmail.com>",
     pages = [
         "Nakala.jl" => "index.md",
         "Modules" => [
@@ -14,8 +14,7 @@ makedocs(;
             "Groups" => "modules/groups.md",
             "Search" => "modules/search.md",
             "Vocabularies" => "modules/vocabularies.md",
-            "Default" => "modules/default.md",
-            
+            "Default" => "modules/default.md"           
         ]
     ],
     sitename = "Nakala.jl"
