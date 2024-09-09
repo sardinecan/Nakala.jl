@@ -33,111 +33,20 @@ println(getfiles_urls_from_data_response)
 ==#
 Nakala.Utilities.listfiles("/home/josselin/files/dh/Nakala.jl/test/testdata")
 
-for (root, dirs, files) in walkdir("/home/josselin/files/dh/Nakala.jl/test/testdata")
-    filter!(x -> startswith(x, ".") == false, dirs)
-    for dir in dirs
-      touch(joinpath(root, dir, "files.csv"))
-      f = open(joinpath(root, dir, "files.csv"), "w")
-        write(f, "filename")
-      close(f)
-
-      println(dir)
-      push!(directories, dir)
-
-      list = readdir(joinpath(root, dir))
-
-      for file in list
-        f = open(joinpath(root, dir, "files.csv"), "a")
-          write(f, "\n"*file)
-        close(f)
-      end
-    end
-  end
-
-
   using CSV
 using DataFrames
 
-# Fonction pour lister les fichiers dans un dossier et écrire dans un fichier CSV
-function listfiles(dir::String)
-    # Liste pour stocker les chemins complets des fichiers
-    files = []
+#==
+étape
+- lister les fichiers à envoyer dans un csv => OK
+- ajouter une description pour les fichiers (nouvelle colonne dans le csv facultatif)
 
-    # Parcourir les entrées du dossier, sans entrer dans les sous-dossiers
-    for entry in readdir(dir, join=true)
-        if isfile(entry)  # Vérifie que c'est un fichier
-            push!(files, entry)
-        end
-    end
-
-    # Si aucun fichier n'est trouvé, on retourne un message d'erreur
-    if isempty(files)
-        println("Aucun fichier trouvé dans le dossier : $dir")
-        return
-    end
-
-    # Créer un DataFrame avec les chemins des fichiers
-    df = DataFrame(FilePath = files)
-
-    # Écrire dans le fichier CSV
-    CSV.write(joinpath(dir, "files.csv"), df)
-
-    println("Le fichier files.csv a été créé avec succès.")
-end
-
-apikey = "01234567-89ab-cdef-0123-456789abcdef" # tnakala user public key for Nakala test api
-
-
-function uploadfiles_from_csv(path::String)
-    df = CSV.read(path, DataFrame)
-    df.SHA1 = Vector{Union{String, Missing}}(undef, nrow(df))
-    for i in 1:nrow(df)
-        file_path = df.FilePath[i]
-        # Vérifier que le fichier existe
-        if isfile(file_path)
-            headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
-            postdatas_uploads_response = Nakala.postdatas_uploads(file_path, headers, true)
-            sha1 = postdatas_uploads_response["body"]["sha1"]
-            df.SHA1[i] = sha1
-        else
-            println("Fichier introuvable : $file_path")
-            df.SHA1[i] = missing
-        end
-    end
-
-    # Sauvegarder le CSV avec la colonne SHA1
-    CSV.write("files_with_sha1.csv", df)
-    println("Le fichier files_with_sha1.csv a été mis à jour avec les codes SHA1.")
-    return df
-end
+- déposer les fichiers sur l'espace temporaire et récupérer les sha1, les mettre dans le csv => OK
+- ajouter les métadonnées de la donnée dans un fichier metadatas.csv => faire une fonction qui transforme le csv en json 
+- créer la donnée et attacher les fichiers en ajoutant les métadonnée
+==#
 
 uploadfiles_from_csv("/home/josselin/files/dh/Nakala.jl/test/testdata/files.csv")
 
-function process_files_and_add_sha1(csv_file::String, api_url::String)
-    # Lire le fichier CSV
-    
-
-    # Ajouter une nouvelle colonne pour les SHA1
-    
-
-    # Boucler sur chaque fichier et envoyer à l'API Nakala
-    for i in 1:nrow(df)
-        file_path = df.FilePath[i]
-
-        # Vérifier que le fichier existe
-        if isfile(file_path)
-            # Envoyer le fichier à l'API et récupérer le SHA1
-            sha1 = send_to_nakala(file_path, api_url)
-            df.SHA1[i] = sha1
-        else
-            println("Fichier introuvable : $file_path")
-            df.SHA1[i] = missing
-        end
-    end
-
-    # Sauvegarder le CSV avec la colonne SHA1
-    CSV.write("files_with_sha1.csv", df)
-    println("Le fichier files_with_sha1.csv a été mis à jour avec les codes SHA1.")
-end
 
 listfiles("/home/josselin/files/dh/Nakala.jl/test/testdata/")

@@ -56,35 +56,65 @@ function getfiles_urls_from_data(data::Dict, filenames::Vector, apiTest::Bool=fa
 end
 export getfiles_urls_from_data
 
+
 """
 
 liste les fichiers contenus dans un dossier (`path`) et écrit cette liste dans un `files.csv`. Si le dossier comporte des sous-dossier, leur contenu est listé de la même manière. 
 """
-function listfiles(path)
-  directories = []
-  for (root, dirs, files) in walkdir(path)
-    filter!(x -> startswith(x, ".") == false, dirs)
-    for dir in dirs
-      touch(joinpath(root, dir, "files.csv"))
-      f = open(joinpath(root, dir, "files.csv"), "w")
-        write(f, "filename")
-      close(f)
+# Fonction pour lister les fichiers dans un dossier et écrire dans un fichier CSV
+function listfiles(dir::String)
+  # Liste pour stocker les chemins complets des fichiers
+  files = []
 
-      println(dir)
-      push!(directories, dir)
-
-      list = readdir(joinpath(root, dir))
-
-      for file in list
-        f = open(joinpath(root, dir, "files.csv"), "a")
-          write(f, "\n"*file)
-        close(f)
+  # Parcourir les entrées du dossier, sans entrer dans les sous-dossiers
+  for entry in readdir(dir, join=true)
+      if isfile(entry)  # Vérifie que c'est un fichier
+          push!(files, entry)
       end
-    end
   end
-  
-  return directories
+
+  # Si aucun fichier n'est trouvé, on retourne un message d'erreur
+  if isempty(files)
+      println("Aucun fichier trouvé dans le dossier : $dir")
+      return
+  end
+
+  # Créer un DataFrame avec les chemins des fichiers
+  df = DataFrame(FilePath = files)
+
+  # Écrire dans le fichier CSV
+  CSV.write(joinpath(dir, "files.csv"), df)
+
+  println("Le fichier files.csv a été créé avec succès.")
 end
+export listfiles
+
+
+"""
+"""
+function uploadfiles_from_csv(path::String)
+  df = CSV.read(path, DataFrame)
+  df.SHA1 = Vector{Union{String, Missing}}(undef, nrow(df))
+  for i in 1:nrow(df)
+      file_path = df.FilePath[i]
+      # Vérifier que le fichier existe
+      if isfile(file_path)
+          headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+          postdatas_uploads_response = Nakala.postdatas_uploads(file_path, headers, true)
+          sha1 = postdatas_uploads_response["body"]["sha1"]
+          df.SHA1[i] = sha1
+      else
+          println("Fichier introuvable : $file_path")
+          df.SHA1[i] = missing
+      end
+  end
+
+  # Sauvegarder le CSV avec la colonne SHA1
+  CSV.write("files_with_sha1.csv", df)
+  println("Le fichier files_with_sha1.csv a été mis à jour avec les codes SHA1.")
+  return df
+end
+export uploadfiles_from_csv
 
 """
 dépot de fichiers sur Nakala à partir d'un liste csv
