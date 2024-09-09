@@ -12,20 +12,21 @@ function contains_key_value(d::Dict, key::Union{String, Symbol}, value::String)
   return false
 end
 export contains_key_value
-  #==
-function contains_key_value(d::Dict, key::Union{String, Symbol}, value::String)
-  if isa(key, String)
-    return check_key_value(d, key, value) || check_key_value(d, Symbol(key), value)
-  elseif isa(key, Symbol)
-    return check_key_value(d, key) || check_key_value(d, string(key))
-  else
-    return false
-  end
-end
-export contains_key_value
 
-function check_key_value(d::Dict, key::Union{String, Symbol}, value::String)
-  return haskey(d, key) && d[key] == value
+
+
+function getdatas_resume(datas::Vector{Any})
+  list = Vector()
+  for data in datas
+    identifier = get(data, "identifier", "")
+    metas = get(data, "metas", "")
+    title = filter(x -> get(x, "propertyUri", "") == "http://nakala.fr/terms#title", metas)[1]
+    item = Dict(get(title, "value", "noTitle") => identifier)
+    push!(list, item)
+  end
+
+  return list
 end
-==#
+export getdatas_resume
+
 end # end module
