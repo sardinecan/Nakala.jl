@@ -1,0 +1,6 @@
+files,sha1
+/home/josselin/files/dh/Nakala.jl/test/testdata/file.txt,a0b65939670bc2c010f4d5d6a0b3e4e4590fb92b
+/home/josselin/files/dh/Nakala.jl/test/testdata/file2.txt,49aaa64346f03598951ad578dacb838e9af096c9
+/home/josselin/files/dh/Nakala.jl/test/testdata/files.csv,940192dc1f7217a3bf9cb0956f7b233b7dd7482b
+/home/josselin/files/dh/Nakala.jl/test/testdata/files_with_sha1.csv,d8ab1f90b09bf70b62cbf95da16239c0b27bfe85
+/home/josselin/files/dh/Nakala.jl/test/testdata/metadata.csv,c4e16569860b623803625bdbb60b9275bc3bc99f
