@@ -28,8 +28,14 @@ wanted_files = [ "guepes-TEI--trad-Lobineau--XVIIIe.xml" ]
 getfiles_urls_from_data_response = Nakala.Utilities.getfiles_urls_from_data(getdatas_response["body"], wanted_files, true)
 println(getfiles_urls_from_data_response)
 
-
+#==
+    Envoyer une donnée à partir d'une liste de fichiers.
+==#
 path = "/home/josselin/files/dh/Nakala.jl/test/testdata/"
 
 fileslist = Nakala.Extras.listfiles(path, true)
 uploadedfiles = Nakala.Extras.postdatas_from_folder(path, headers)
+df = DataFrame(a=[1,2,4], b=missing)
+df.b = ['a', 'b', 'c']
+
+println(df)

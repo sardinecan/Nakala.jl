@@ -7,17 +7,17 @@ import CSV
 import DataFrames
 
 
-include("./utilities.jl")
+include("./Utilities.jl")
 
-include("./search.jl")
-include("./datas.jl")
-include("./vocabularies.jl")
-include("./collections.jl")
-include("./groups.jl")
-include("./users.jl")
-include("./default.jl")
+include("./Search.jl")
+include("./Datas.jl")
+include("./Vocabularies.jl")
+include("./Collections.jl")
+include("./Groups.jl")
+include("./Users.jl")
+include("./Default.jl")
 
-include("./extras.jl")
+include("./Extras.jl")
 
 using .Search
 using .Datas

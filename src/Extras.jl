@@ -51,13 +51,30 @@ submitDataFromFolder : dépôt d'une donnée à partir d'un dossier contenant le
 @arg path : chemin vers le dossier contenant les données à déposer
 @arg directory : nom du dossier constitutif de la donnée
 =#
+
+#==
+  - Avoir une liste des fichiers à envoyer
+  - Envoyer les fichiers à partir d'une liste et noter les sha1
+  - créer les métadonnées de la donnée avec celles des données
+  - envoyer la donnée
+==#
+
 function postdatas_from_folder(dirpath::String, headers::Dict, apiTest::Bool=false)
-  fileslist = listfiles(dirpath)
-  uploadedfiles = uploadfiles_from_list(fileslist, Dict( "X-API-KEY" => get(headers, "X-API-KEY", ""), :accept => "application/json"), true, path=dirpath)
-  metadata = metadata_from_csv(joinpath(dirpath, "__.metadata.csv"))
-  filesmetadata = files_metadatas_from_csv(joinpath(dirpath, "__.files_with_sha1.csv"))
+  fileslist_csv = joinpath(dirpath, "_.files.csv")
+  uploadfiles_headers = Dict( 
+    "X-API-KEY" => get(headers, "X-API-KEY", ""),
+    :accept => "application/json"
+  )
+  uploadedfiles = uploadfiles_from_csv(fileslist_csv, uploadfiles_headers, true, apiTest)
   
-  postdata_response = postdatas(headers, merge!(metadata, filesmetadata), true)
+  # métadonnées de la donnée
+  metadata_csv = metadata_from_csv(joinpath(dirpath, "_.metadata.csv"))
+  # métadonnées des fichiers
+  filesmetadata = files_metadatas_from_csv(joinpath(dirpath, "_.files_with_sha1.csv"))
+  
+  # envoi de la donnée
+  body = merge!(metadata_csv, filesmetadata)
+  postdata_response = postdatas(headers, body, apiTest)
   return postdata_response
 end
 export postdatas_from_folder
@@ -65,13 +82,13 @@ export postdatas_from_folder
 
 """
 
-liste les fichiers contenus dans un dossier (`path`) et retourne un `DataFrame` contenant cette liste. Si `writecsv == true`, un fichier `files.csv` est écrit dans le répertoire. 
+liste les fichiers contenus dans un dossier (`path`) et retourne un `DataFrame` contenant cette liste. Si `writecsv == true`, un fichier `_.files.csv` est écrit dans le répertoire. 
 """
 # Fonction pour lister les fichiers dans un dossier et écrire dans un fichier CSV
 function listfiles(dirpath::String, writecsv::Bool=false)
   fileslist = []
   for entry in readdir(dirpath, join=true)
-      if isfile(entry)  # Vérifie que c'est un fichier
+      if isfile(entry) && !startswith(basename(entry), "_.")
           push!(fileslist, entry)
       end
   end
@@ -82,12 +99,17 @@ function listfiles(dirpath::String, writecsv::Bool=false)
   end
 
   # Créer un DataFrame avec les chemins des fichiers
-  fileslist_dataframe = DataFrame(files = fileslist)
-
+  # la colonne sha1 sera ajoutée au moment de l'envoi des fichiers
+  fileslist_dataframe = DataFrame(
+    files = fileslist,
+    embargoed=missing,
+    description=missing
+  )
+  
   # Écrire dans le fichier CSV
   if writecsv == true
     CSV.write(joinpath(dirpath, "_.files.csv"), fileslist_dataframe)
-    println("Le fichier files.csv a été créé avec succès.")
+    println("Le fichier _.files.csv a été créé avec succès.")
   end
   return fileslist_dataframe
 end
@@ -96,18 +118,19 @@ export listfiles
 
 """
 """
-function uploadfiles_from_list(fileslist::DataFrame, headers, writecsv::Bool=false; path::String="")
+function uploadfiles_from_csv(fileslist_csv::String, headers::Dict, writecsv::Bool=false, apiTest::Bool=false)
+  dirpath = abspath(dirname(fileslist_csv))
+  fileslist = CSV.read(joinpath(dirpath, "_.files.csv"), DataFrame, header=1)
   fileslist.sha1 = Vector{Union{String, Missing}}(undef, nrow(fileslist))
   for i in 1:nrow(fileslist)
       filepath = fileslist.files[i]
       # Vérifier que le fichier existe
       if isfile(filepath)
-          postdatas_uploads_response = postdatas_uploads(string(filepath), headers, true)
-          println(postdatas_uploads_response)
-          println(filepath)
+          println("Envoi du fichier : ", filepath)
+          postdatas_uploads_response = postdatas_uploads(string(filepath), headers, apiTest)
           sha1 = postdatas_uploads_response["body"]["sha1"]
-          println(sha1)
           fileslist.sha1[i] = sha1
+          println("Identifiant", sha1)
       else
           println("Fichier introuvable : $filepath")
           fileslist.sha1[i] = missing
@@ -116,56 +139,16 @@ function uploadfiles_from_list(fileslist::DataFrame, headers, writecsv::Bool=fal
 
   if writecsv == true
       # Sauvegarder le CSV avec la colonne sha1
-      CSV.write(joinpath(path, "_.files_with_sha1.csv"), fileslist)
+      CSV.write(joinpath(dirpath, "_.files_with_sha1.csv"), fileslist)
       println("Le fichier _.files_with_sha1.csv a été mis à jour avec les codes sha1.")
   end
 
   return fileslist
 end
-export uploadfiles_from_list
-
-#==
-étape
-- lister les fichiers à envoyer dans un csv => OK
-- ajouter une description pour les fichiers (nouvelle colonne dans le csv facultatif)
-
-- déposer les fichiers sur l'espace temporaire et récupérer les sha1, les mettre dans le csv => OK
-- ajouter les métadonnées de la donnée dans un fichier metadatas.csv => faire une fonction qui transforme le csv en json 
-- créer la donnée et attacher les fichiers en ajoutant les métadonnée
-==#
-
-"""
-dépot de fichiers sur Nakala à partir d'un liste csv
-@arg directoryPath : chemin vers le dossier contenant les fichiers à déposer et la liste
-
-@return : array [ métadonnées des fichiers déposés ]
-"""
-function postfiles_from_list(path::String, apiTest::Bool=false)
-  files2upload = CSV.read(joinpath(path, "_.files.csv"), DataFrame, header=1) # fichier de métadonnées 
-
-  #%% Dépôt des fichiers
-  files = Vector()
-  filesInfo = []
-  
-  for (i, row) in enumerate(eachrow(files2upload))
-    filename = row[:filename]
-    
-    println("Envoi du fichier n°", i, " - ", filename)
-    fileResponse = postFile(joinpath(directoryPath, filename))
-    fileIdentifier = fileResponse["sha1"]
-
-    push!(files, fileResponse) # récupération de l'identifiant Nakala du fichier (fileIdentifier) pour le dépot des métadonnées et de la ressource
-    push!(filesInfo, [filename, fileIdentifier])
-  end
-  
-  return [files, filesInfo]
-end
+export uploadfiles_from_csv
 
 
-#=
-metadataFromCsv : établissement des métadonnées d'une donnée à partir d'un fichier csv
-@arg path : chemin vers le fichier de métadonnées
-=#
+
 function metadata_from_csv(path::String)
   metadata = CSV.read(path, DataFrame, header=1) # fichier de métadonnées 
 
@@ -193,8 +176,7 @@ function metadata_from_csv(path::String)
 
   )
   push!(meta, metaTitle)
-  
-  
+    
   # datatype (obligatoire)
   if datatypes !== nothing
     for datatype in datatypes
@@ -206,8 +188,6 @@ function metadata_from_csv(path::String)
       push!(meta, metaType)
     end
   end
-
-  
 
   # authorité/creator (obligatoire, mais accepte la valeur null)
   for author in authors   
@@ -286,7 +266,7 @@ function metadata_from_csv(path::String)
   # assemblage des métadonnées avant envoi de la ressource
   body = Dict{Symbol, Any}(
     :collectionsIds => collections,
-    :status => "pending",
+    :status => status,
     :metas => meta,
     :rights => rights
   )
@@ -295,47 +275,30 @@ function metadata_from_csv(path::String)
 end
 
 function files_metadatas_from_csv(path::String)
-    metadata = CSV.read(path, DataFrame, header=1)
-    
-    files = []
-    # Boucler sur chaque ligne du DataFrame
-    for row in eachrow(metadata)
+  metadata = CSV.read(path, DataFrame, header=1)  
+  files = []
+  # Boucler sur chaque ligne du DataFrame
+  for row in eachrow(metadata)
 
-        name = basename(row[:files])
-        sha1 = row[:sha1]
-        embargoed = haskey(row, :embargoed) ? row[:embargoed] : ""
-        description = haskey(row, :description) ? row[:description] : ""
+      name = basename(row[:files])
+      sha1 = row[:sha1]
+      embargoed = haskey(row, :embargoed) ? row[:embargoed] : ""
+      description = haskey(row, :description) ? row[:description] : ""
 
-        # Créer un dictionnaire pour la ligne actuelle
-        file = Dict(
-            "name" => name,
-            "sha1" => sha1,
-            "embargoed" => embargoed,
-            "description" => description
-        )
+      # Créer un dictionnaire pour la ligne actuelle
+      file = Dict(
+          "name" => name,
+          "sha1" => sha1,
+          "embargoed" => embargoed,
+          "description" => description
+      )
 
-        #==
-        # Ajouter les colonnes et valeurs dans le dictionnaire
-        for col in names(df)
-            row_dict[col] = row[col]
-        end
-        ==#
-
-        # Ajouter le dictionnaire à la liste
-        push!(files, file)
-    end
-
-    return Dict(:files => files)
-    #==
-    
-    filesInfo = postedFilesFromList[2]
-
-  metadata = metadataFromCsv(joinpath(path, directory, "metadata.csv"))
-
-  merge!(metadata, files)
-  ==# 
+      # Ajouter le dictionnaire à la liste
+      push!(files, file)
   end
 
+  return Dict(:files => files)
+end
 
 end # end module
 
