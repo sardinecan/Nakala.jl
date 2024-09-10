@@ -57,35 +57,45 @@ end
 export getfiles_urls_from_data
 
 
+#=
+submitDataFromFolder : dépôt d'une donnée à partir d'un dossier contenant les fichiers constitutifs de la donnée et les métadonnées contenus dans un ficheir csv
+@arg path : chemin vers le dossier contenant les données à déposer
+@arg directory : nom du dossier constitutif de la donnée
+=#
+function postdatas_from_folder(dirpath::String, headers::Dict, apiTest::Bool=false)
+  fileslist = listfiles(dirpath)
+  
+end
+export postdatas_from_folder
+
+
 """
 
-liste les fichiers contenus dans un dossier (`path`) et écrit cette liste dans un `files.csv`. Si le dossier comporte des sous-dossier, leur contenu est listé de la même manière. 
+liste les fichiers contenus dans un dossier (`path`) et retourne un `DataFrame` contenant cette liste. Si `writecsv == true`, un fichier `files.csv` est écrit dans le répertoire. 
 """
 # Fonction pour lister les fichiers dans un dossier et écrire dans un fichier CSV
-function listfiles(dir::String)
-  # Liste pour stocker les chemins complets des fichiers
-  files = []
-
-  # Parcourir les entrées du dossier, sans entrer dans les sous-dossiers
+function listfiles(path::String, writecsv::Bool=false)
+  fileslist = []
   for entry in readdir(dir, join=true)
       if isfile(entry)  # Vérifie que c'est un fichier
-          push!(files, entry)
+          push!(fileslist, entry)
       end
   end
 
-  # Si aucun fichier n'est trouvé, on retourne un message d'erreur
-  if isempty(files)
+  if isempty(fileslist)
       println("Aucun fichier trouvé dans le dossier : $dir")
       return
   end
 
   # Créer un DataFrame avec les chemins des fichiers
-  df = DataFrame(FilePath = files)
+  fileslist_dataframe = DataFrame(fileslist = files)
 
   # Écrire dans le fichier CSV
-  CSV.write(joinpath(dir, "files.csv"), df)
-
-  println("Le fichier files.csv a été créé avec succès.")
+  if writecsv == true
+    CSV.write(joinpath(dir, "files.csv"), fileslist_dataframe)
+    println("Le fichier files.csv a été créé avec succès.")
+  end
+  return fileslist_dataframe
 end
 export listfiles
 
@@ -115,6 +125,16 @@ function uploadfiles_from_csv(path::String)
   return df
 end
 export uploadfiles_from_csv
+
+#==
+étape
+- lister les fichiers à envoyer dans un csv => OK
+- ajouter une description pour les fichiers (nouvelle colonne dans le csv facultatif)
+
+- déposer les fichiers sur l'espace temporaire et récupérer les sha1, les mettre dans le csv => OK
+- ajouter les métadonnées de la donnée dans un fichier metadatas.csv => faire une fonction qui transforme le csv en json 
+- créer la donnée et attacher les fichiers en ajoutant les métadonnée
+==#
 
 """
 dépot de fichiers sur Nakala à partir d'un liste csv
@@ -157,10 +177,10 @@ function metadata_from_csv(path::String)
   date = metadata[!, :date][1]
   license = metadata[!, :licence][1]
   status = metadata[!, :status][1]
-  datatype = metadata[!, :datatype][1]
+  metadata[!, :datatype][1] !== missing ? datatypes = split(metadata[!, :datatype][1], ";") : datatypes = nothing
   description = metadata[!, :description][1]
-  metadata[!, :collections][1] !== missing  ? keywords = split(metadata[!, :keywords][1], ";") : keywords = nothing
-  metadata[!, :collections][1] !== missing  ? datarights = split(metadata[!, :rights][1], ";") : datarights = nothing
+  metadata[!, :keywords][1] !== missing  ? keywords = split(metadata[!, :keywords][1], ";") : keywords = nothing
+  metadata[!, :datarights][1] !== missing  ? datarights = split(metadata[!, :rights][1], ";") : datarights = nothing
   lang = metadata[!, :lang][1]
   
   # métadonnées de la ressource
@@ -175,14 +195,21 @@ function metadata_from_csv(path::String)
 
   )
   push!(meta, metaTitle)
-
+  
+  
   # datatype (obligatoire)
-  metaType = Dict(
-    :value => datatype,
-    :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI",
-    :propertyUri => "http://nakala.fr/terms#type"
-  )
-  push!(meta, metaType)
+  if datatypes !== nothing
+    for datatype in datatypes
+      metaType = Dict(
+        :value => datatype,
+        :typeUri => "http://www.w3.org/2001/XMLSchema#anyURI",
+        :propertyUri => "http://nakala.fr/terms#type"
+      )
+      push!(meta, metaType)
+    end
+  end
+
+  
 
   # authorité/creator (obligatoire, mais accepte la valeur null)
   for author in authors   
@@ -267,47 +294,6 @@ function metadata_from_csv(path::String)
   )
 
   return body
-end
-
-#=
-submitDataFromFolder : dépôt d'une donnée à partir d'un dossier contenant les fichiers constitutifs de la donnée et les métadonnées contenus dans un ficheir csv
-@arg path : chemin vers le dossier contenant les données à déposer
-@arg directory : nom du dossier constitutif de la donnée
-=#
-function postdatas_from_folder(path::String, directory::String)
-  postedFilesFromList = postFilesFromList(joinpath(path, directory))
-  files = Dict( :files => postedFilesFromList[1] )
-  filesInfo = postedFilesFromList[2]
-
-  metadata = metadataFromCsv(joinpath(path, directory, "metadata.csv"))
-
-  merge!(metadata, files) 
-
-  postedData = postData(metadata)
-  dataIdentifier = postedData["payload"]["id"] # récupération de l'identifiant Nakala de la ressource (identifier)
-  
-  return dataIdentifier
-  
-  if isfile(joinpath(path, "datasUploaded.csv"))
-    f = open(joinpath(path, "datasUploaded.csv"), "a")       
-      write(f, "\n"*directory*","*dataIdentifier)
-    close(f)      
-  else
-    touch(joinpath(path, "datasUploaded.csv"))
-    f = open(joinpath(path, "datasUploaded.csv"), "w") 
-      write(f, "ressource,identifiant")
-      write(f, "\n"*directory*","*dataIdentifier)
-    close(f)
-  end
-
-  
-  touch(joinpath(path, directory, directory*".csv"))
-  f = open(joinpath(path, directory, directory*".csv"), "w") 
-    write(f, "filename,identifier,fileIdentifier")
-    for file in filesInfo
-      write(f, "\n"*file[1]*","*dataIdentifier*","*file[2])
-    end
-  close(f)
 end
 
 end # end module
