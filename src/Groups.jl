@@ -5,10 +5,22 @@ using HTTP, JSON
 """
     getgroups_search(params::Array, headers::Dict; apitest::Bool=false)
 
-
+Récupère les utilisateurs et groupes d'utilisateurs, retourne des utilisateurs et groupes d'utilisateurs en fonction de critères de recherche.
 
 # exemple
 ```julia-repl
+julia> params = [
+  :q => "Nakala",
+  :order => "asc",
+  :page => 1,
+  :limit => 10
+]
+
+julia> Nakala.Groups.getgroups_search(params, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("isAdmin"=>true, "name"=>"Nakala.jl_test", "isMember"=>true, "users"=>Any[Dict{String, Any}("role"=>"ROLE_USER", "photo"=>nothing, "f…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getgroups_search(params::Array, headers::Dict; apitest::Bool=false)
@@ -47,10 +59,15 @@ export getgroups_search
 """
     getgroups(identifier::String, headers::Dict; apitest::Bool=false)
 
-
+Récupère les informations sur le groupe d'utilisateurs désigné par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Groups.getgroups(groupid, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("isAdmin"=>true, "name"=>"Nakala.jl_test", "isMember"=>true, "users"=>Any[Dict{String, Any}("role"=>"ROLE_USER", "photo"=>nothing, "…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getgroups(identifier::String, headers::Dict; apitest::Bool=false)
@@ -89,10 +106,23 @@ export getgroups
 """
     putgroups(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-
+Modifie un groupe d'utilisateurs désigné par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = Dict(
+  :name => "Nakala.jl_test",
+  :users => [
+    Dict( :username => "unakala1", :role => "ROLE_USER" ),
+    Dict( :username => "unakala2", :role => "ROLE_USER" ),
+  ]
+)
+
+julia> Nakala.Groups.putgroups(groupid, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => ""
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function putgroups(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -130,10 +160,15 @@ export putgroups
 """
     deletegroups(identifier::String, headers::Dict; apitest::Bool=false)
 
-
+Supprime le groupe d'utilisateurs désigné par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Groups.deletegroups("01734655-7079-11ef-b203-52540084ccd3", headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => ""
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function deletegroups(identifier::String, headers::Dict; apitest::Bool=false)
@@ -171,10 +206,23 @@ export deletegroups
 """
     postgroups(headers::Dict, body::Dict; apitest::Bool=false)
 
-
+Crée un groupe d'utilisateurs
 
 # exemple
 ```julia-repl
+julia> body = Dict(
+  :name => "Nakala.jl_test",
+  :users => [Dict(
+      :username => "unakala1",
+      :role => "ROLE_USER"
+  )]
+)
+
+julia> postgroups_response = Nakala.Groups.postgroups(headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"Group created", "payload"=>Dict{String, Any}("id"=>"01734655-7079-11ef-b203-52540084ccd3"), "code"=>201)
+  "status"    => 201
+  "isSuccess" => true
 ```
 """
 function postgroups(headers::Dict, body::Dict; apitest::Bool=false)
