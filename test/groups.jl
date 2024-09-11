@@ -18,7 +18,7 @@ body = Dict(
       :role => "ROLE_USER"
   )]
 )
-postgroups_response = Nakala.Groups.postgroups(headers, body, true)
+postgroups_response = Nakala.Groups.postgroups(headers, body, apitest=true)
 postgroups_response["body"]["payload"]["id"]
 @test postgroups_response["status"] == 201
 
@@ -38,12 +38,12 @@ body = Dict(
       :role => "ROLE_USER"
   )]
 )
-postgroups_response = Nakala.Groups.postgroups(headers, body, true)
+postgroups_response = Nakala.Groups.postgroups(headers, body, apitest=true)
 groupid = postgroups_response["body"]["payload"]["id"]
 
 # récupération des informations du groupe
-getgroups_response = Nakala.Groups.getgroups(groupid, headers, true)
-@test getgroups_response["body"]["name"] == "Nakala.jl"
+getgroups_response = Nakala.Groups.getgroups(groupid, headers, apitest=true)
+@test getgroups_response["body"]["name"] == "Nakala.jl_2"
 
 
 #==
@@ -57,11 +57,11 @@ headers = Dict(
 body = Dict(
   :name => "Nakala.jl",
   :users => [Dict(
-      :username => "unakala1",
+      :username => "unakala2",
       :role => "ROLE_USER"
   )]
 )
-postgroups_response = Nakala.Groups.postgroups(headers, body, true)
+postgroups_response = Nakala.Groups.postgroups(headers, body, apitest=true)
 groupid = postgroups_response["body"]["payload"]["id"]
 
 # modification du groupe
@@ -72,9 +72,9 @@ body = Dict(
     Dict( :username => "unakala2", :role => "ROLE_USER" ),
   ]
 )
-putgroups_response = Nakala.Groups.putgroups(groupid, headers, body, true)
+putgroups_response = Nakala.Groups.putgroups(groupid, headers, body, apitest=true)
 
-getgroups_response = Nakala.Groups.getgroups(groupid, headers, true)
+getgroups_response = Nakala.Groups.getgroups(groupid, headers, apitest=true)
 getgroups_response["body"]["users"]
 @test length(getgroups_response["body"]["users"]) == 3
 
@@ -92,7 +92,7 @@ params = [
   :page => 1,
   :limit => 10
 ]
-getgroups_search_response = Nakala.Groups.getgroups_search(params, headers, true)
+getgroups_search_response = Nakala.Groups.getgroups_search(params, headers, apitest=true)
 
 @test getgroups_search_response["status"] == 200
 
@@ -111,9 +111,9 @@ body = Dict(
       :role => "ROLE_USER"
   )]
 )
-postgroups_response = Nakala.Groups.postgroups(headers, body, true)
+postgroups_response = Nakala.Groups.postgroups(headers, body, apitest=true)
 groupid = postgroups_response["body"]["payload"]["id"]
 
 # suppression du groupe
-deletegroups_response = Nakala.Groups.deletegroups(groupid, headers, true)
-@test deletegroups_response == 200
+deletegroups_response = Nakala.Groups.deletegroups(groupid, headers, apitest=true)
+@test deletegroups_response["status"] == 200

@@ -3,7 +3,7 @@ using HTTP
 using JSON
 
 """
-    getresourceprocessing(identifier::String, headers::Dict, apiTest=false)
+    getresourceprocessing(identifier::String, headers::Dict, apitest::Bool=false)
 
 État d'une ressource dans ElasticSearch et Datacite.
 
@@ -11,8 +11,8 @@ using JSON
 ```julia-repl
 ```
 """
-function getresourceprocessing(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getresourceprocessing(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "resourceprocessing", identifier)
   try
     # Envoi de la requête

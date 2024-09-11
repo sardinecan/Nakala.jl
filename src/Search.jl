@@ -3,7 +3,7 @@ using HTTP
 using JSON
 
 """
-    search_authors(params::Array, apiTest::Bool=false)
+    search_authors(params::Array; apitest::Bool=false)
 
 Récupération des auteurs associés aux données de Nakala.
 
@@ -11,8 +11,8 @@ Récupération des auteurs associés aux données de Nakala.
 ```julia-repl
 ```
 """
-function search_authors(params::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function search_authors(params::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "authors/search?") * HTTP.URIs.escapeuri(params)
 
   try
@@ -46,7 +46,7 @@ export search_authors
 
 
 """
-    search(params::Array, apiTest::Bool=false)
+    search(params::Array; apitest::Bool=false)
 
 Recherche des données Nakala.
 
@@ -54,8 +54,8 @@ Recherche des données Nakala.
 ```julia-repl
 ```
 """
-function search(params::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function search(params::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "search?") * HTTP.URIs.escapeuri(params)
 
   try

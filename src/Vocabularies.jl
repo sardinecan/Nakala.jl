@@ -2,7 +2,7 @@ module Vocabularies
 
 
 """
-    getvocabularies_licenses(params::Array, apiTest::Bool=false)
+    getvocabularies_licenses(params::Array; apitest::Bool=false)
 
 Récupération des licences des données de Nakala.
 
@@ -10,8 +10,8 @@ Récupération des licences des données de Nakala.
 ```julia-repl
 ```
 """
-function getvocabularies_licenses(params::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_licenses(params::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "licenses?") * HTTP.URIs.escapeuri(params)
   headers = Dict( :accept => "application/json" )
   try
@@ -45,7 +45,7 @@ export getvocabularies_licenses
 
 
 """
-    getvocabularies_languages(params::Array, apiTest::Bool=false)
+    getvocabularies_languages(params::Array; apitest::Bool=false)
 
 Récupération des langues des métadonnées.
 
@@ -53,9 +53,9 @@ Récupération des langues des métadonnées.
 ```julia-repl
 ```
 """
-function getvocabularies_languages(params::Array, apiTest::Bool=false)
+function getvocabularies_languages(params::Array; apitest::Bool=false)
   # @todo problème avec les caractères spéciaux, malgré l'utilisation de escapeuri
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"
   url = joinpath(apiurl, "vocabularies", "languages?") * HTTP.escapeuri(params)
   headers = Dict( :accept => "application/json" )
   try
@@ -89,7 +89,7 @@ export getvocabularies_languages
 
 
 """
-    getvocabularies_countryCodes(params::Array, apiTest::Bool=false)
+    getvocabularies_countryCodes(params::Array; apitest::Bool=false)
 
 Récupération des codes pays ISO 3166 (alpha-2).
 
@@ -97,8 +97,8 @@ Récupération des codes pays ISO 3166 (alpha-2).
 ```julia-repl
 ```
 """
-function getvocabularies_countryCodes(params::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_countryCodes(params::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "countryCodes?") * HTTP.URIs.escapeuri(params)
   headers = Dict( :accept => "application/json" )
 
@@ -133,7 +133,7 @@ export getvocabularies_countryCodes
 
 
 """
-    getvocabularies_dataStatuses(apiTest::Bool=false)
+    getvocabularies_dataStatuses(;apitest::Bool=false)
 
 Récupération des statuts des données de Nakala.
 
@@ -141,8 +141,8 @@ Récupération des statuts des données de Nakala.
 ```julia-repl
 ```
 """
-function getvocabularies_dataStatuses(apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_dataStatuses(;apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "dataStatuses")
   headers = Dict( :accept => "application/json" )
 
@@ -177,7 +177,7 @@ export getvocabularies_dataStatuses
 
 
 """
-    getvocabularies_collectionStatuses(apiTest::Bool=false)
+    getvocabularies_collectionStatuses(;apitest::Bool=false)
 
 Récupération des statuts des collections de Nakala.
 
@@ -185,8 +185,8 @@ Récupération des statuts des collections de Nakala.
 ```julia-repl
 ```
 """
-function getvocabularies_collectionStatuses(apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_collectionStatuses(;apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "collectionStatuses")
   headers = Dict( :accept => "application/json" )
 
@@ -221,7 +221,7 @@ export getvocabularies_collectionStatuses
 
 
 """
-    getvocabularies_datatypes(apiTest::Bool=false)
+    getvocabularies_datatypes(;apitest::Bool=false)
 
 Récupération des types des données de Nakala.
 
@@ -229,8 +229,8 @@ Récupération des types des données de Nakala.
 ```julia-repl
 ```
 """
-function getvocabularies_datatypes(apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_datatypes(;apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "datatypes")
   headers = Dict( :accept => "application/json" )
 
@@ -265,7 +265,7 @@ export getvocabularies_datatypes
 
 
 """
-    getvocabularies_properties(apiTest::Bool=false)
+    getvocabularies_properties(;apitest::Bool=false)
 
 Récupération des propriétés des métadonnées.
 
@@ -273,8 +273,8 @@ Récupération des propriétés des métadonnées.
 ```julia-repl
 ```
 """
-function getvocabularies_properties(apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_properties(;apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "properties")
   headers = Dict( :accept => "application/json" )
 
@@ -309,7 +309,7 @@ export getvocabularies_properties
 
 
 """
-    getvocabularies_metadatatypes(apiTest::Bool=false)
+    getvocabularies_metadatatypes(;apitest::Bool=false)
 
 Récupération des types des métadonnées.
 
@@ -317,8 +317,8 @@ Récupération des types des métadonnées.
 ```julia-repl
 ```
 """
-function getvocabularies_metadatatypes(apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_metadatatypes(;apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "metadatatypes")
   headers = Dict( :accept => "application/json" )
 
@@ -353,7 +353,7 @@ export getvocabularies_metadatatypes
 
 
 """
-    getvocabularies_dcmitypes(apiTest::Bool=false)
+    getvocabularies_dcmitypes(;apitest::Bool=false)
 
 Récupération des types DCMI.
 
@@ -361,8 +361,8 @@ Récupération des types DCMI.
 ```julia-repl
 ```
 """
-function getvocabularies_dcmitypes(apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getvocabularies_dcmitypes(;apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "vocabularies", "dcmitypes")
   headers = Dict( :accept => "application/json" )
 

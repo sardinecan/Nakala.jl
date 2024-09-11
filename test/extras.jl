@@ -9,7 +9,7 @@ userid = "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f3b" # unakala1 public user id
 #==
     Obtenir des paires titre - identifiant à partir d'une liste de données
 ==#
-datas = Nakala.Search.search([:q => "édition", :size=>"20"], true)
+datas = Nakala.Search.search([:q => "édition", :size=>"20"], apitest=true)
 Nakala.Utilities.getdatas_resume(datas["body"]["datas"])
 
 
@@ -22,10 +22,10 @@ headers = Dict(
     "X-API-KEY" => apikey,
     "Content-Type" => "application/json"
 )
-getdatas_response = Nakala.Datas.getdatas(identifier, headers, true)
+getdatas_response = Nakala.Datas.getdatas(identifier, headers, apitest=true)
 
 wanted_files = [ "guepes-TEI--trad-Lobineau--XVIIIe.xml" ]
-getfiles_urls_from_data_response = Nakala.Utilities.getfiles_urls_from_data(getdatas_response["body"], wanted_files, true)
+getfiles_urls_from_data_response = Nakala.Utilities.getfiles_urls_from_data(getdatas_response["body"], wanted_files, apitest=true)
 println(getfiles_urls_from_data_response)
 
 #==
@@ -33,7 +33,7 @@ println(getfiles_urls_from_data_response)
 ==#
 path = "/home/josselin/files/dh/Nakala.jl/test/testdata/"
 
-fileslist = Nakala.Extras.listfiles(path, true)
+fileslist = Nakala.Extras.listfiles(path, writecsv=true)
 uploadedfiles = Nakala.Extras.postdatas_from_folder(path, headers)
 df = DataFrame(a=[1,2,4], b=missing)
 df.b = ['a', 'b', 'c']

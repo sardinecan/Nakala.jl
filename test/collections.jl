@@ -17,7 +17,7 @@ body = Dict(
   :rights => []
 )
 
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 @test postcollections_response["status"] == 201
 
 
@@ -33,11 +33,11 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.postcollections(headers, body, true)
+postcollections_response = Nakala.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # récupération des informations de la collection
-getcollections_response = Nakala.Collections.getcollections(identifier, headers, true)
+getcollections_response = Nakala.Collections.getcollections(identifier, headers, apitest=true)
 
 #test
 @test getcollections_response["status"] == 200
@@ -56,7 +56,7 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # modification des informations
@@ -66,8 +66,8 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-putcollections_response = Nakala.Collections.putcollections(identifier, headers, body, true)
-getcollections_response = Nakala.Collections.getcollections(identifier, headers, true)
+putcollections_response = Nakala.Collections.putcollections(identifier, headers, body, apitest=true)
+getcollections_response = Nakala.Collections.getcollections(identifier, headers, apitest=true)
 
 #test
 @test putcollections_response["status"] == 204
@@ -86,12 +86,12 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # suppression de la collection
-deletecollections_response = Nakala.Collections.deletecollections(identifier, headers, true)
-getcollections_response = Nakala.Collections.getcollections(identifier, headers, true)
+deletecollections_response = Nakala.Collections.deletecollections(identifier, headers, apitest=true)
+getcollections_response = Nakala.Collections.getcollections(identifier, headers, apitest=true)
 
 @test deletecollections_response["status"] == 204
 @test getcollections_response["status"] == 404
@@ -101,7 +101,7 @@ getcollections_response = Nakala.Collections.getcollections(identifier, headers,
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # création d'une donnée
@@ -129,7 +129,7 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.postdatas(headers, body, true)
+postdatas_response = Nakala.postdatas(headers, body, apitest=true)
 data_identifier = postdatas_response["body"]["payload"]["id"]
 
 # création d'une collection
@@ -143,7 +143,7 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # ajout de la donnée dans la collection
@@ -152,7 +152,7 @@ headers = Dict(
   "Content-Type" => "application/json"
 )
 body = [ data_identifier ]
-postcollections_datas_response = Nakala.Collections.postcollections_datas(identifier, headers, body, true) 
+postcollections_datas_response = Nakala.Collections.postcollections_datas(identifier, headers, body, apitest=true) 
 
 # test
 @test postcollections_datas_response["status"] == 201
@@ -162,7 +162,7 @@ postcollections_datas_response = Nakala.Collections.postcollections_datas(identi
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # création d'une donnée
@@ -190,7 +190,7 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.postdatas(headers, body, true)
+postdatas_response = Nakala.postdatas(headers, body, apitest=true)
 data_identifier = postdatas_response["body"]["payload"]["id"]
 
 # création d'une collection
@@ -204,7 +204,7 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # ajout de la donnée dans la collection
@@ -213,11 +213,11 @@ headers = Dict(
   "Content-Type" => "application/json"
 )
 body = [ data_identifier ]
-postcollections_datas_response = Nakala.Collections.postcollections_datas(identifier, headers, body, true) 
+postcollections_datas_response = Nakala.Collections.postcollections_datas(identifier, headers, body, apitest=true) 
 
 # Récupération de la liste paginée des données contenues dans la collection.
 params = [ :page => 1, :limit => 10 ]
-getcollections_datas_response = Nakala.Collections.getcollections_datas(identifier, params, headers, true) 
+getcollections_datas_response = Nakala.Collections.getcollections_datas(identifier, params, headers, apitest=true) 
 getcollections_datas_response["body"]["data"][1]["identifier"]
 
 @test getcollections_datas_response["status"] == 200
@@ -228,7 +228,7 @@ getcollections_datas_response["body"]["data"][1]["identifier"]
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # création d'une donnée
@@ -256,7 +256,7 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.postdatas(headers, body, true)
+postdatas_response = Nakala.postdatas(headers, body, apitest=true)
 data_identifier = postdatas_response["body"]["payload"]["id"]
 
 # création d'une collection
@@ -270,7 +270,7 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # ajout de la donnée dans la collection
@@ -279,7 +279,7 @@ headers = Dict(
   "Content-Type" => "application/json"
 )
 body = [ data_identifier ]
-postcollections_datas_response = Nakala.Collections.postcollections_datas(identifier, headers, body, true) 
+postcollections_datas_response = Nakala.Collections.postcollections_datas(identifier, headers, body, apitest=true) 
 
 # suppression de la donnée de la collection
 headers = Dict(
@@ -287,11 +287,11 @@ headers = Dict(
   "Content-Type" => "application/json"
 )
 body = [ data_identifier ]
-deletecollections_datas_response = Nakala.Collections.deletecollections_datas(identifier, headers, body, true)
+deletecollections_datas_response = Nakala.Collections.deletecollections_datas(identifier, headers, body, apitest=true)
 
 # Récupération de la liste paginée des données contenues dans la collection.
 params = [ :page => 1, :limit => 10 ]
-getcollections_datas_response = Nakala.Collections.getcollections_datas(identifier, params, headers, true) 
+getcollections_datas_response = Nakala.Collections.getcollections_datas(identifier, params, headers, apitest=true) 
 
 @test deletecollections_datas_response["status"] == 200
 @test getcollections_datas_response["body"]["total"] == 0
@@ -309,7 +309,7 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # récupération des métadonnées
@@ -317,7 +317,7 @@ headers = Dict(
   "X-API-KEY" => apikey,
   "Content-Type" => "application/json"
 )
-getcollections_metadatas_response = Nakala.Collections.getcollections_metadatas(identifier, headers, true)
+getcollections_metadatas_response = Nakala.Collections.getcollections_metadatas(identifier, headers, apitest=true)
 
 #test
 @test getcollections_metadatas_response["status"] == 200
@@ -336,7 +336,7 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # ajout d'une nouvelle métadonnée
@@ -345,8 +345,8 @@ headers = Dict(
   "Content-Type" => "application/json"
 )
 body = Dict(:value => "My collection", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string")
-postcollections_metadatas_response = Nakala.Collections.postcollections_metadatas(identifier, headers, body, true)
-getcollections_metadatas_response = Nakala.Collections.getcollections_metadatas(identifier, headers, true)
+postcollections_metadatas_response = Nakala.Collections.postcollections_metadatas(identifier, headers, body, apitest=true)
+getcollections_metadatas_response = Nakala.Collections.getcollections_metadatas(identifier, headers, apitest=true)
 
 @test postcollections_metadatas_response["status"] == 201
 @test length(getcollections_metadatas_response["body"]) == 2
@@ -365,12 +365,12 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # ajout de droits sur une collection
 body = [ Dict( :id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f3b", :role => "ROLE_READER" ) ] # id of public profile unakala1
-postcollections_rights_response = Nakala.Collections.postcollections_rights(identifier, headers, body, true)
+postcollections_rights_response = Nakala.Collections.postcollections_rights(identifier, headers, body, apitest=true)
 
 #test
 @test postcollections_rights_response["status"] == 200
@@ -389,11 +389,11 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # récupération des utilisateurs / groupes ayant des droits sur la collection
-getcollections_rights_response = Nakala.Collections.getcollections_rights(identifier, headers, true)
+getcollections_rights_response = Nakala.Collections.getcollections_rights(identifier, headers, apitest=true)
 @test getcollections_rights_response["status"] == 200
 
 
@@ -409,17 +409,17 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-postcollections_response = Nakala.Collections.postcollections(headers, body, true)
+postcollections_response = Nakala.Collections.postcollections(headers, body, apitest=true)
 identifier = postcollections_response["body"]["payload"]["id"]
 
 # ajout de droits sur la collection
 body = [ Dict( :id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f3b", :role => "ROLE_READER" ) ] # id of public profile unakala1
-postcollections_rights_response = Nakala.Collections.postcollections_rights(identifier, headers, body, true)
+postcollections_rights_response = Nakala.Collections.postcollections_rights(identifier, headers, body, apitest=true)
 
 # suppression des droits sur la collection
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = Dict( :id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f3b", :role => "ROLE_READER" )
-deletecollections_rights_response = Nakala.Collections.deletecollections_rights(identifier, headers, body, true)
+deletecollections_rights_response = Nakala.Collections.deletecollections_rights(identifier, headers, body, apitest=true)
 @test deletecollections_rights_response["status"] == 200
 
 

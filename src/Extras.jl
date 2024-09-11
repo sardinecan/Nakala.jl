@@ -24,11 +24,11 @@ export getdatas_resume
 
 
 """
-    getfiles_urls_from_data(data::Dict, filenames::Vector,  apiTest::Bool=false)
+    getfiles_urls_from_data(data::Dict, filenames::Vector;  apitest::Bool=false)
 À partir d'une liste de fichiers dans une donnée, retourne les urls de téléchargement.
 """
-function getfiles_urls_from_data(data::Dict, filenames::Vector, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"
+function getfiles_urls_from_data(data::Dict, filenames::Vector; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"
   identifier = data["identifier"]
   filesList = data["files"]
 
@@ -59,13 +59,13 @@ submitDataFromFolder : dépôt d'une donnée à partir d'un dossier contenant le
   - envoyer la donnée
 ==#
 
-function postdatas_from_folder(dirpath::String, headers::Dict, apiTest::Bool=false)
+function postdatas_from_folder(dirpath::String, headers::Dict; apitest::Bool=false)
   fileslist_csv = joinpath(dirpath, "_.files.csv")
   uploadfiles_headers = Dict( 
     "X-API-KEY" => get(headers, "X-API-KEY", ""),
     :accept => "application/json"
   )
-  uploadedfiles = uploadfiles_from_csv(fileslist_csv, uploadfiles_headers, true, apiTest)
+  uploadedfiles = uploadfiles_from_csv(fileslist_csv, uploadfiles_headers, true, apitest=apitest)
   
   # métadonnées de la donnée
   metadata_csv = metadata_from_csv(joinpath(dirpath, "_.metadata.csv"))
@@ -74,7 +74,7 @@ function postdatas_from_folder(dirpath::String, headers::Dict, apiTest::Bool=fal
   
   # envoi de la donnée
   body = merge!(metadata_csv, filesmetadata)
-  postdata_response = postdatas(headers, body, apiTest)
+  postdata_response = postdatas(headers, body, apitest=apitest)
   return postdata_response
 end
 export postdatas_from_folder
@@ -85,7 +85,7 @@ export postdatas_from_folder
 liste les fichiers contenus dans un dossier (`path`) et retourne un `DataFrame` contenant cette liste. Si `writecsv == true`, un fichier `_.files.csv` est écrit dans le répertoire. 
 """
 # Fonction pour lister les fichiers dans un dossier et écrire dans un fichier CSV
-function listfiles(dirpath::String, writecsv::Bool=false)
+function listfiles(dirpath::String; writecsv::Bool=false)
   fileslist = []
   for entry in readdir(dirpath, join=true)
       if isfile(entry) && !startswith(basename(entry), "_.")
@@ -118,7 +118,7 @@ export listfiles
 
 """
 """
-function uploadfiles_from_csv(fileslist_csv::String, headers::Dict, writecsv::Bool=false, apiTest::Bool=false)
+function uploadfiles_from_csv(fileslist_csv::String, headers::Dict; writecsv::Bool=false, apitest::Bool=false)
   dirpath = abspath(dirname(fileslist_csv))
   fileslist = CSV.read(joinpath(dirpath, "_.files.csv"), DataFrame, header=1)
   fileslist.sha1 = Vector{Union{String, Missing}}(undef, nrow(fileslist))
@@ -127,7 +127,7 @@ function uploadfiles_from_csv(fileslist_csv::String, headers::Dict, writecsv::Bo
       # Vérifier que le fichier existe
       if isfile(filepath)
           println("Envoi du fichier : ", filepath)
-          postdatas_uploads_response = postdatas_uploads(string(filepath), headers, apiTest)
+          postdatas_uploads_response = postdatas_uploads(string(filepath), headers, apitest=apitest)
           sha1 = postdatas_uploads_response["body"]["sha1"]
           fileslist.sha1[i] = sha1
           println("Identifiant", sha1)

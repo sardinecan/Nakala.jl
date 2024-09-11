@@ -8,7 +8,7 @@ privateapikey = ""  #private key for api for status test
 Récupération des informations sur l'utilisateur courant.
 ==#
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-getusers_me_response = Nakala.Users.getusers_me(headers, true)
+getusers_me_response = Nakala.Users.getusers_me(headers, apitest=true)
 
 @test getusers_me_response["status"] == 200
 getusers_me_response["body"]["photo"]
@@ -19,15 +19,15 @@ Mise à jour des informations sur l'utilisateur courant.
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = Dict( :givenname => "Test", :surname => "Nakala", :mail => "nakala@huma-num.fr", :photo => "http://mynakala.photo" )
 
-putusers_me_response  = Nakala.Users.putusers_me(headers, body, true)
-@test Nakala.Users.getusers_me(headers, true)["body"]["photo"] == "http://mynakala.photo"
+putusers_me_response  = Nakala.Users.putusers_me(headers, body, apitest=true)
+@test Nakala.Users.getusers_me(headers, apitest=true)["body"]["photo"] == "http://mynakala.photo"
 
 #==
 Mise à jour de la clé d'API de l'utilisateur courant.
 ==#
 apikey_user3 = "f41f5957-d396-3bb9-ce35-a4692773f636"
 headers = Dict( "X-API-KEY" => apikey_user3, "Content-Type" => "application/json" )
-putusers_me_apikey_response  = Nakala.Users.putusers_me_apikey(headers, true)
+putusers_me_apikey_response  = Nakala.Users.putusers_me_apikey(headers, apitest=true)
 
 # retourne une erreur car pas de droit pour l'api test
 @test putusers_me_apikey_response["status"] == 403
@@ -50,7 +50,7 @@ body = Dict(
   #:orderLang => "fr"
 )
 
-postusers_datas_response = Nakala.Users.postusers_datas(scope, headers, body, true)
+postusers_datas_response = Nakala.Users.postusers_datas(scope, headers, body, apitest=true)
 
 @test postusers_datas_response["status"]  == 200
 
@@ -64,7 +64,7 @@ params = [
   "collections[]" => "def"
 ]
 
-getusers_datas_datatypes_response = Nakala.Users.getusers_datas_datatypes(params, headers, true)
+getusers_datas_datatypes_response = Nakala.Users.getusers_datas_datatypes(params, headers, apitest=true)
 @test getusers_datas_datatypes_response["status"] == 200
 
 #==
@@ -77,7 +77,7 @@ params = [
   "collections[]" => "def"
 ]
 
-getusers_datas_createdyears_response = Nakala.Users.getusers_datas_createdyears(params, headers, true)
+getusers_datas_createdyears_response = Nakala.Users.getusers_datas_createdyears(params, headers, apitest=true)
 @test getusers_datas_createdyears_response["status"] == 200
 
 #==
@@ -90,7 +90,7 @@ params = [
   "collections[]" => "def"
 ]
 
-getusers_datas_statuses_response = Nakala.Users.getusers_datas_statuses(params, headers, true)
+getusers_datas_statuses_response = Nakala.Users.getusers_datas_statuses(params, headers, apitest=true)
 @test getusers_datas_statuses_response["status"] == 200
 
 #==
@@ -105,7 +105,7 @@ params = [
   :order => "datemodify,desc"
 ]
 
-getusers_groups_response = Nakala.Users.getusers_groups(scope, params, headers, true)
+getusers_groups_response = Nakala.Users.getusers_groups(scope, params, headers, apitest=true)
 @test getusers_groups_response["status"] == 200
 
 #==
@@ -114,7 +114,7 @@ Récupération des différentes années de création des collections accessibles
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 params = [ :scope =>"all" ]
 
-getusers_collections_createdyears_response = Nakala.Users.getusers_collections_createdyears(params, headers, true)
+getusers_collections_createdyears_response = Nakala.Users.getusers_collections_createdyears(params, headers, apitest=true)
 @test getusers_collections_createdyears_response["status"] == 200
 
 #==
@@ -123,7 +123,7 @@ Récupération des différents statuts des collections accessibles par un utilis
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 params = [ :scope =>"all" ]
 
-getusers_collections_statuses_response = Nakala.Users.getusers_collections_statuses(params, headers, true)
+getusers_collections_statuses_response = Nakala.Users.getusers_collections_statuses(params, headers, apitest=true)
 @test getusers_collections_statuses_response["status"] == 200
 
 #==
@@ -141,5 +141,5 @@ body = Dict(
   #:titleSearchLang => "fr",
   #:orderLang => "fr"
 )
-postusers_collections_response = Nakala.Users.postusers_collections(scope, headers, body, true)
+postusers_collections_response = Nakala.Users.postusers_collections(scope, headers, body, apitest=true)
 @test postusers_collections_response["status"] == 200

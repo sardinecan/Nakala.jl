@@ -4,7 +4,7 @@ using JSON
 
 
 """
-    getusers_me(headers::Dict, apiTest=false)
+    getusers_me(headers::Dict; apitest::Bool=false)
 
 Récupération des informations sur l'utilisateur courant.
 
@@ -12,8 +12,8 @@ Récupération des informations sur l'utilisateur courant.
 ```julia-repl
 ```
 """
-function getusers_me(headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getusers_me(headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "me")
   try
     # Envoi de la requête
@@ -46,7 +46,7 @@ export getusers_me
 
 
 """
-    putusers_me(headers::Dict, body::Dict, apiTest=false)
+    putusers_me(headers::Dict, body::Dict; apitest::Bool=false)
 
 Mise à jour des informations sur l'utilisateur courant.
 
@@ -54,8 +54,8 @@ Mise à jour des informations sur l'utilisateur courant.
 ```julia-repl
 ```
 """
-function putusers_me(headers::Dict, body::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putusers_me(headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "me")
   try
     # Envoi de la requête
@@ -87,7 +87,7 @@ export putusers_me
 
 
 """
-    putusers_me_apikey(headers::Dict, apiTest=false)
+    putusers_me_apikey(headers::Dict; apitest::Bool=false)
 
 Mise à jour de la clé d'API de l'utilisateur courant.
 
@@ -95,8 +95,8 @@ Mise à jour de la clé d'API de l'utilisateur courant.
 ```julia-repl
 ```
 """
-function putusers_me_apikey(headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putusers_me_apikey(headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "me", "apikey")
   try
     # Envoi de la requête
@@ -129,7 +129,7 @@ export putusers_me_apikey
 
 
 """
-    postusers_datas(scope::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    postusers_datas(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Récupération des données accessibles par un utilisateur.
 
@@ -137,8 +137,8 @@ Récupération des données accessibles par un utilisateur.
 ```julia-repl
 ```
 """
-function postusers_datas(scope::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postusers_datas(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "datas", scope)
 
   try
@@ -171,7 +171,7 @@ export postusers_datas
 
 
 """
-    getusers_datas_datatypes(params::Array, headers::Dict, apiTest=false)
+    getusers_datas_datatypes(params::Array, headers::Dict; apitest::Bool=false)
 
 Récupération des types des données accessibles par un utilisateur.
 
@@ -179,8 +179,8 @@ Récupération des types des données accessibles par un utilisateur.
 ```julia-repl
 ```
 """
-function getusers_datas_datatypes(params::Array, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getusers_datas_datatypes(params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "datas", "datatypes?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
@@ -213,7 +213,7 @@ export getusers_datas_datatypes
 
 
 """
-    getusers_datas_createdyears(params::Array, headers::Dict, apiTest=false)
+    getusers_datas_createdyears(params::Array, headers::Dict; apitest::Bool=false)
 
 Récupération des différentes années de création des données accessibles par un utilisateur.
 
@@ -221,8 +221,8 @@ Récupération des différentes années de création des données accessibles pa
 ```julia-repl
 ```
 """
-function getusers_datas_createdyears(params::Array, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getusers_datas_createdyears(params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "datas", "createdyears?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
@@ -255,7 +255,7 @@ export getusers_datas_createdyears
 
 
 """
-    getusers_datas_statuses(params::Array, headers::Dict, apiTest=false)
+    getusers_datas_statuses(params::Array, headers::Dict; apitest::Bool=false)
 
 Récupération des différents statuts des données accessibles par un utilisateur.
 
@@ -263,8 +263,8 @@ Récupération des différents statuts des données accessibles par un utilisate
 ```julia-repl
 ```
 """
-function getusers_datas_statuses(params::Array, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getusers_datas_statuses(params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "datas", "statuses?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
@@ -297,7 +297,7 @@ export getusers_datas_statuses
 
 
 """
-    getusers_groups(scope::String, params::Array, headers::Dict, apiTest=false)
+    getusers_groups(scope::String, params::Array, headers::Dict; apitest::Bool=false)
 
 Récupération des groupes d'un utilisateur.
 
@@ -305,8 +305,8 @@ Récupération des groupes d'un utilisateur.
 ```julia-repl
 ```
 """
-function getusers_groups(scope::String, params::Array, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getusers_groups(scope::String, params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "groups", scope*"?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
@@ -339,7 +339,7 @@ export getusers_groups
 
 
 """
-    postusers_collections(scope::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    postusers_collections(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Récupération des collections accessibles par un utilisateur.
 
@@ -347,8 +347,8 @@ Récupération des collections accessibles par un utilisateur.
 ```julia-repl
 ```
 """
-function postusers_collections(scope::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postusers_collections(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "collections", scope)
 
   try
@@ -381,7 +381,7 @@ export postusers_collections
 
 
 """
-    getusers_collections_createdyears(params::Array, headers::Dict, apiTest=false)
+    getusers_collections_createdyears(params::Array, headers::Dict; apitest::Bool=false)
 
 Récupération des différentes années de création des collections accessibles par un utilisateur.
 
@@ -389,8 +389,8 @@ Récupération des différentes années de création des collections accessibles
 ```julia-repl
 ```
 """
-function getusers_collections_createdyears(params::Array, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getusers_collections_createdyears(params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "collections", "createdyears?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
@@ -423,7 +423,7 @@ export getusers_collections_createdyears
 
 
 """
-    getusers_collections_statuses(params::Array, headers::Dict, apiTest=false)
+    getusers_collections_statuses(params::Array, headers::Dict; apitest::Bool=false)
 
 Récupération des différents statuts des collections accessibles par un utilisateur.
 
@@ -431,8 +431,8 @@ Récupération des différents statuts des collections accessibles par un utilis
 ```julia-repl
 ```
 """
-function getusers_collections_statuses(params::Array, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getusers_collections_statuses(params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "users", "collections", "statuses?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête

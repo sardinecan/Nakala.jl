@@ -16,7 +16,7 @@ function createData()
   # dépôt d'un fichier
   headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
   file = "$path/testdata/file.txt"
-  postdatas_uploads_response = Nakala.Datas.postdatas_uploads(file, headers, true)
+  postdatas_uploads_response = Nakala.Datas.postdatas_uploads(file, headers, apitest=true)
   sha1 = postdatas_uploads_response["body"]["sha1"]
 
   # création de la donnée
@@ -36,7 +36,7 @@ function createData()
     ],
     :rights => []
   )
-  postdata_response = Nakala.Datas.postdatas(headers, body, true)
+  postdata_response = Nakala.Datas.postdatas(headers, body, apitest=true)
   identifier = postdata_response["body"]["payload"]["id"] 
 
   return Dict(
@@ -50,7 +50,7 @@ end
 ## Dépôt de fichier.
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 #test
@@ -62,7 +62,7 @@ sha1 = postdatas_uploads_response["body"]["sha1"]
 # Dépôt d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # Création de la donnée
@@ -82,7 +82,7 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 
 #test
 @test postdatas_response["status"] == 201
@@ -90,8 +90,8 @@ postdatas_response = Nakala.Datas.postdatas(headers, body, true)
 
 ## Récupération des informations d'une donnée
 identifier = createData()[:dataIdentifier]
-getdatas_response = Nakala.Datas.getdatas(identifier, headers, true)
-@test Nakala.Datas.getdatas(identifier, headers, true)["status"] == 200
+getdatas_response = Nakala.Datas.getdatas(identifier, headers, apitest=true)
+@test Nakala.Datas.getdatas(identifier, headers, apitest=true)["status"] == 200
 
 
 
@@ -107,18 +107,18 @@ body = Dict(
     Dict("value" => "New description.", "propertyUri" => "http://purl.org/dc/terms/description", "lang" => "en", "typeUri" => "http://www.w3.org/2001/XMLSchema#string")
   ]
 )
-putdatas_response = Nakala.Datas.putdatas(identifier, headers, body, true)
+putdatas_response = Nakala.Datas.putdatas(identifier, headers, body, apitest=true)
 
 # test
 @test putdatas_response["status"] == 204
-#Nakala.Datas.getdatas(identifier, headers, true)["body"]["metas"]
+#Nakala.Datas.getdatas(identifier, headers, apitest=true)["body"]["metas"]
 
 
 
 ## Supprimer une donnée
 identifier = createData()[:dataIdentifier]
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
-deletedatas_response = Nakala.Datas.deletedatas(identifier, headers, true)
+deletedatas_response = Nakala.Datas.deletedatas(identifier, headers, apitest=true)
 @test deletedatas_response["status"] == 204
 
 
@@ -126,7 +126,7 @@ deletedatas_response = Nakala.Datas.deletedatas(identifier, headers, true)
 ## Récupération des métadonnées des fichiers associés à une donnée.
 identifier = createData()[:dataIdentifier]
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
-getdatas_files_response = Nakala.Datas.getdatas_files(identifier, headers, true)
+getdatas_files_response = Nakala.Datas.getdatas_files(identifier, headers, apitest=true)
 getdatas_files_response["body"]
 @test getdatas_files_response["status"] == 200
 
@@ -139,13 +139,13 @@ identifier = createData()[:dataIdentifier]
 # envoi d'un nouveau fichier sur l'espace temporaire
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file2.txt"
-postfile_response = Nakala.Datas.postdatas_uploads(file, headers, true)
+postfile_response = Nakala.Datas.postdatas_uploads(file, headers, apitest=true)
 sha1 = postfile_response["body"]["sha1"]
 
 # ajout du nouveau fichier dans la donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = Dict( "description" => "Greetings.", "sha1" => sha1, "embargoed" => "2024-09-01" )
-postdatas_files_reponse = Nakala.Datas.postdatas_files(identifier, headers, body, true)
+postdatas_files_reponse = Nakala.Datas.postdatas_files(identifier, headers, body, apitest=true)
 
 @test postdatas_files_reponse["status"] == 200
 
@@ -159,17 +159,17 @@ fileIdentifier = createData()[:fileIdentifier]
 # envoi d'un nouveau fichier sur l'espace temporaire
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file2.txt"
-postfile_response = Nakala.Datas.postdatas_uploads(file, headers, true)
+postfile_response = Nakala.Datas.postdatas_uploads(file, headers, apitest=true)
 sha1 = postfile_response["body"]["sha1"]
 
 # ajout du nouveau fichier dans la donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = Dict( "description" => "Greetings.", "sha1" => sha1, "embargoed" => "2024-09-01" )
-postdatas_files_reponse = Nakala.Datas.postdatas_files(identifier, headers, body, true)
+postdatas_files_reponse = Nakala.Datas.postdatas_files(identifier, headers, body, apitest=true)
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 
 # suppression du premier fichier
-deletedatas_files_response = Nakala.Datas.deletedatas_files(identifier, fileIdentifier, headers, true)
+deletedatas_files_response = Nakala.Datas.deletedatas_files(identifier, fileIdentifier, headers, apitest=true)
 @test deletedatas_files_response["status"] == 204
 
 
@@ -177,7 +177,7 @@ deletedatas_files_response = Nakala.Datas.deletedatas_files(identifier, fileIden
 ## Récupération de la liste des métadonnées d'une donnée.
 identifier = createData()[:dataIdentifier]
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-getdatas_metadatas_response = Nakala.Datas.getdatas_metadatas(identifier, headers, true)
+getdatas_metadatas_response = Nakala.Datas.getdatas_metadatas(identifier, headers, apitest=true)
 @test getdatas_metadatas_response["status"] == 200
 
 
@@ -186,7 +186,7 @@ getdatas_metadatas_response = Nakala.Datas.getdatas_metadatas(identifier, header
 identifier = createData()[:dataIdentifier]
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 body = Dict( :value => "My Data", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string" )
-postdatas_metadatas_response = Nakala.Datas.postdatas_metadatas(identifier, headers, body, true)
+postdatas_metadatas_response = Nakala.Datas.postdatas_metadatas(identifier, headers, body, apitest=true)
 
 @test postdatas_metadatas_response["status"] == 201
 
@@ -199,12 +199,12 @@ identifier = createData()[:dataIdentifier]
 # ajout d'une métadonnée (titre en anglais)
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 body = Dict( :value => "My Data", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string" )
-postdatas_metadatas_response = Nakala.Datas.postdatas_metadatas(identifier, headers, body, true)
+postdatas_metadatas_response = Nakala.Datas.postdatas_metadatas(identifier, headers, body, apitest=true)
 
 # suppression de la métadonnée ajoutée
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 body = Dict( :propertyUri => "http://nakala.fr/terms#title", :lang => "en" )
-deletedatas_metadatas_response = Nakala.Datas.deletedatas_metadatas(identifier, headers, body, true)
+deletedatas_metadatas_response = Nakala.Datas.deletedatas_metadatas(identifier, headers, body, apitest=true)
 
 #test
 @test deletedatas_metadatas_response["status"] == 200
@@ -214,7 +214,7 @@ deletedatas_metadatas_response = Nakala.Datas.deletedatas_metadatas(identifier, 
 ## Récupération de la liste des relations d'une donnée
 identifier = createData()[:dataIdentifier]
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-getdatas_relations_response = Nakala.Datas.getdatas_relations(identifier, headers, true)
+getdatas_relations_response = Nakala.Datas.getdatas_relations(identifier, headers, apitest=true)
 @test getdatas_relations_response["status"] == 200
 
 
@@ -224,7 +224,7 @@ getdatas_relations_response = Nakala.Datas.getdatas_relations(identifier, header
 # Dépôt d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # Création de la donnée publique
@@ -244,13 +244,13 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 
 # ajout d'une relations
 identifier = postdatas_response["body"]["payload"]["id"]
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 body = [ Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test") ]
-postdatas_relations_response = Nakala.Datas.postdatas_relations(identifier, headers, body, true)
+postdatas_relations_response = Nakala.Datas.postdatas_relations(identifier, headers, body, apitest=true)
 
 # test
 @test postdatas_relations_response["status"] == 200
@@ -261,7 +261,7 @@ postdatas_relations_response = Nakala.Datas.postdatas_relations(identifier, head
 # Dépôt d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # Création de la donnée publique
@@ -281,18 +281,18 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 
 # ajout d'une relations
 identifier = postdatas_response["body"]["payload"]["id"]
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 body = [ Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test") ]
-postdatas_relations_response = Nakala.Datas.postdatas_relations(identifier, headers, body, true)
+postdatas_relations_response = Nakala.Datas.postdatas_relations(identifier, headers, body, apitest=true)
 
 # suppression de la relation
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test")
-deletedatas_relations_response = Nakala.Datas.deletedatas_relations(identifier, headers, body, true)
+deletedatas_relations_response = Nakala.Datas.deletedatas_relations(identifier, headers, body, apitest=true)
 
 # test
 @test deletedatas_relations_response["status"] == 200
@@ -303,7 +303,7 @@ deletedatas_relations_response = Nakala.Datas.deletedatas_relations(identifier, 
 ## Récupération des groupes et des utilisateurs ayant des droits sur la donnée.
 # création d'une donnée
 identifier = createData()[:dataIdentifier]
-getdatas_rights_response = Nakala.Datas.getdatas_rights(identifier, headers, true)
+getdatas_rights_response = Nakala.Datas.getdatas_rights(identifier, headers, apitest=true)
 
 #test
 @test getdatas_rights_response["status"] == 200
@@ -317,7 +317,7 @@ identifier = createData()[:dataIdentifier]
 # ajout des droits à la donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = [ Dict( :id => userid, :role => "ROLE_READER" ) ]
-postdatas_rights_response = Nakala.Datas.postdatas_rights(identifier, headers, body, true)
+postdatas_rights_response = Nakala.Datas.postdatas_rights(identifier, headers, body, apitest=true)
 
 #test
 @test postdatas_rights_response["status"] == 200
@@ -331,12 +331,12 @@ identifier = createData()[:dataIdentifier]
 # ajout des droits à la donnée
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = [ Dict( :id => userid, :role => "ROLE_READER" ) ]
-postdatas_rights_response = Nakala.Datas.postdatas_rights(identifier, headers, body, true)
+postdatas_rights_response = Nakala.Datas.postdatas_rights(identifier, headers, body, apitest=true)
 
 # suppression des droits
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = Dict( :id => userid, :role => "ROLE_READER" ) # ou Dict(:role => "ROLE_READER") pour supprimer tous les lecteurs.
-deletedatas_rights_response = Nakala.Datas.deletedatas_rights(identifier, headers, body, true)
+deletedatas_rights_response = Nakala.Datas.deletedatas_rights(identifier, headers, body, apitest=true)
 
 #test
 @test deletedatas_rights_response["status"] == 200
@@ -345,7 +345,7 @@ deletedatas_rights_response = Nakala.Datas.deletedatas_rights(identifier, header
 
 ## Récupération de la liste des collections contenant la donnée.
 identifier = createData()[:dataIdentifier]
-getdatas_collections_response = Nakala.Datas.getdatas_collections(identifier, headers, true)
+getdatas_collections_response = Nakala.Datas.getdatas_collections(identifier, headers, apitest=true)
 
 #test
 @test getdatas_collections_response["status"] == 200
@@ -356,7 +356,7 @@ getdatas_collections_response = Nakala.Datas.getdatas_collections(identifier, he
 # Dépôt d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # Création de la donnée publique
@@ -376,7 +376,7 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 identifier = postdatas_response["body"]["payload"]["id"]
 
 # creation de la collection et récupération de l'id la collection doit être publique pour être liée à une donnée publique
@@ -387,11 +387,11 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-newcollectionid = Nakala.Collections.postcollections(headers, body, true)["body"]["payload"]["id"]
+newcollectionid = Nakala.Collections.postcollections(headers, body, apitest=true)["body"]["payload"]["id"]
 
 # ajout de la donnée dans une collection
 body = [ newcollectionid ]
-postdatas_collections_response = Nakala.Datas.postdatas_collections(identifier, headers, body, true)
+postdatas_collections_response = Nakala.Datas.postdatas_collections(identifier, headers, body, apitest=true)
 
 # test
 @test postdatas_collections_response["status"] == 201
@@ -402,7 +402,7 @@ postdatas_collections_response = Nakala.Datas.postdatas_collections(identifier, 
 # Dépôt d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # Création de la donnée publique
@@ -422,7 +422,7 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 identifier = postdatas_response["body"]["payload"]["id"]
 
 # creation de la collection et récupération de l'id la collection doit être publique pour être liée à une donnée publique
@@ -433,11 +433,11 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-newcollectionid = Nakala.Collections.postcollections(headers, body, true)["body"]["payload"]["id"]
+newcollectionid = Nakala.Collections.postcollections(headers, body, apitest=true)["body"]["payload"]["id"]
 
 # ajout de la donnée dans une collection
 body = [ newcollectionid ]
-postdatas_collections_response = Nakala.Datas.postdatas_collections(identifier, headers, body, true)["body"]
+postdatas_collections_response = Nakala.Datas.postdatas_collections(identifier, headers, body, apitest=true)["body"]
 
 # creation d'une autre collection pour remplacer la première
 body = Dict(
@@ -446,12 +446,12 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-nouvellecollectionid = Nakala.Collections.postcollections(headers, body, true)["body"]["payload"]["id"]
+nouvellecollectionid = Nakala.Collections.postcollections(headers, body, apitest=true)["body"]["payload"]["id"]
 
 # remplacement de la collection par la nouvelle
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = [ nouvellecollectionid ]
-putdatas_collections_response = Nakala.Datas.putdatas_collections(identifier, headers, body, true)
+putdatas_collections_response = Nakala.Datas.putdatas_collections(identifier, headers, body, apitest=true)
 
 # test
 @test putdatas_collections_response["status"] == 204
@@ -462,7 +462,7 @@ putdatas_collections_response = Nakala.Datas.putdatas_collections(identifier, he
 # Dépôt d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # Création de la donnée publique
@@ -482,7 +482,7 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 identifier = postdatas_response["body"]["payload"]["id"]
 
 # creation de la collection et récupération de l'id la collection doit être publique pour être liée à une donnée publique
@@ -493,15 +493,15 @@ body = Dict(
   :datas => [],
   :rights => []
 )
-newcollectionid = Nakala.Collections.postcollections(headers, body, true)["body"]["payload"]["id"]
+newcollectionid = Nakala.Collections.postcollections(headers, body, apitest=true)["body"]["payload"]["id"]
 
 # ajout de la donnée dans une collection
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 body = [ newcollectionid ]
-postdatas_collections_response = Nakala.Datas.postdatas_collections(identifier, headers, body, true)["body"]
+postdatas_collections_response = Nakala.Datas.postdatas_collections(identifier, headers, body, apitest=true)["body"]
 
 # suppression de la donnée dans la collection
-deletedatas_collections_response = Nakala.Datas.deletedatas_collections(identifier, headers, body, true)
+deletedatas_collections_response = Nakala.Datas.deletedatas_collections(identifier, headers, body, apitest=true)
 
 @test deletedatas_collections_response["status"] == 200
 
@@ -510,7 +510,7 @@ deletedatas_collections_response = Nakala.Datas.deletedatas_collections(identifi
 ## Récupération du statut d'une donnée.
 identifier = createData()[:dataIdentifier]
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-getdatas_status_response = Nakala.Datas.getdatas_status(identifier, headers, true)
+getdatas_status_response = Nakala.Datas.getdatas_status(identifier, headers, apitest=true)
 
 # test
 @test getdatas_status_response["status"] == 200 
@@ -520,14 +520,14 @@ getdatas_status_response = Nakala.Datas.getdatas_status(identifier, headers, tru
 ## Changement du statut d'une donnée.
 identifier = createData()[:dataIdentifier]
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-putdatas_status_response = Nakala.Datas.putdatas_status(identifier, "published", headers, true)
+putdatas_status_response = Nakala.Datas.putdatas_status(identifier, "published", headers, apitest=true)
 @test putdatas_status_response["status"] == 204
 
 
 
 ## Récupération pour un utilisateur de la liste des objets fichiers déposés non encore associés à une donnée.
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-getdatas_uploads_response = Nakala.Datas.getdatas_uploads(headers, true)
+getdatas_uploads_response = Nakala.Datas.getdatas_uploads(headers, apitest=true)
 
 @test getdatas_uploads_response["status"] == 200
 
@@ -536,16 +536,16 @@ getdatas_uploads_response = Nakala.Datas.getdatas_uploads(headers, true)
 # dépôt d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.Datas.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.Datas.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # lister les fichiers en attente
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-getdatas_uploads_response = Nakala.Datas.getdatas_uploads(headers, true)
+getdatas_uploads_response = Nakala.Datas.getdatas_uploads(headers, apitest=true)
 
 # supprimer les fichiers en attente
 headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
-deletedatas_uploads_response = Nakala.Datas.deletedatas_uploads(sha1, headers, true)
+deletedatas_uploads_response = Nakala.Datas.deletedatas_uploads(sha1, headers, apitest=true)
 
 #test
 @test deletedatas_uploads_response["status"] == 200
@@ -556,4 +556,4 @@ deletedatas_uploads_response = Nakala.Datas.deletedatas_uploads(sha1, headers, t
 identifier = createData()[:dataIdentifier]
 header = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
 output = "$path/download"
-Nakala.Datas.downloaddatas_files(identifier,  output, header, true)
+Nakala.Datas.downloaddatas_files(identifier,  output, header, apitest=true)

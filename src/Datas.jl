@@ -6,7 +6,7 @@ import ..Utilities: contains_key_value
 
 
 """
-    postdatas_uploads(file::String, headers::Dict, apiTest::Bool=false)
+    postdatas_uploads(file::String, headers::Dict; apitest::Bool=false)
 
 Dépôt de fichier.
 
@@ -14,8 +14,8 @@ Dépôt de fichier.
 ```julia-repl
 ```
 """
-function postdatas_uploads(file::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postdatas_uploads(file::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", "uploads")
 
   f = open(file, "r")
@@ -51,7 +51,7 @@ export postdatas_uploads
 
 
 """
-    postdatas_files(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    postdatas_files(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Ajout d'un fichier à une donnée.
 
@@ -59,8 +59,8 @@ Ajout d'un fichier à une donnée.
 ```julia-repl
 ```
 """
-function postdatas_files(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postdatas_files(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "files")
 
   try
@@ -93,7 +93,7 @@ export postdatas_files
 
 
 """
-    deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict, apiTest::Bool=false)
+    deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict; apitest::Bool=false)
 
 Suppression de fichier à une donnée.
 
@@ -101,8 +101,8 @@ Suppression de fichier à une donnée.
 ```julia-repl
 ```
 """
-function deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "files", fileIdentifier)
   try
     # Envoi de la requête
@@ -134,7 +134,7 @@ export deletedatas_files
 
 
 """
-    postdatas(headers::Dict, body::Dict, apiTest=false)
+    postdatas(headers::Dict, body::Dict; apitest::Bool=false)
 
 Dépôt d'une nouvelle donnée.
 
@@ -142,8 +142,8 @@ Dépôt d'une nouvelle donnée.
 ```julia-repl
 ```
 """
-function postdatas(headers::Dict, body::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postdatas(headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas")
   try
     # Envoi de la requête
@@ -176,7 +176,7 @@ export postdatas
 
 
 """
-    getdatas(identifier::String, headers::Dict, apiTest=false)
+    getdatas(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération des informations sur une donnée.
 
@@ -184,8 +184,8 @@ Récupération des informations sur une donnée.
 ```julia-repl
 ```
 """
-function getdatas(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier)
   try
     # Envoi de la requête
@@ -224,7 +224,7 @@ export getdatas
 
 
 """
-    getdatas_version(identifier::String, headers::Dict, apiTest=false)
+    getdatas_version(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération de la liste des versions d'une donnée.
 
@@ -232,8 +232,8 @@ Récupération de la liste des versions d'une donnée.
 ```julia-repl
 ```
 """
-function getdatas_version(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_version(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "version")
   try
     # Envoi de la requête
@@ -266,7 +266,7 @@ export getdatas_version
 
 
 """
-    putdatas(identifier::String, headers::Dict, body::Dict, apiTest=false)
+    putdatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Modification des informations d'une donnée.
 
@@ -274,8 +274,8 @@ Modification des informations d'une donnée.
 ```julia-repl
 ```
 """
-function putdatas(identifier::String, headers::Dict, body::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putdatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier)
   try
     # Envoi de la requête
@@ -307,7 +307,7 @@ export putdatas
 
 
 """
-    deletedatas(identifier::String, headers::Dict, apiTest=false)
+    deletedatas(identifier::String, headers::Dict; apitest::Bool=false)
 
 Suppression d'une donnée.
 
@@ -315,8 +315,8 @@ Suppression d'une donnée.
 ```julia-repl
 ```
 """
-function deletedatas(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletedatas(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier)
   try
     # Envoi de la requête
@@ -348,7 +348,7 @@ export deletedatas
 
 
 """
-    getdatas_files(identifier::String, headers::Dict, apiTest::Bool=false)
+    getdatas_files(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération des métadonnées des fichiers associés à une donnée.
 
@@ -356,8 +356,8 @@ Récupération des métadonnées des fichiers associés à une donnée.
 ```julia-repl
 ```
 """
-function getdatas_files(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_files(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "files")
   try
     # Envoi de la requête
@@ -390,7 +390,7 @@ export getdatas_files
 
 
 """
-    getdatas_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
+    getdatas_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération de la liste des métadonnées d'une donnée.
 
@@ -398,8 +398,8 @@ Récupération de la liste des métadonnées d'une donnée.
 ```julia-repl
 ```
 """
-function getdatas_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "metadatas")
   try
     # Envoi de la requête
@@ -432,7 +432,7 @@ export getdatas_metadatas
 
 
 """
-    postdatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    postdatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Suppression de métadonnées pour une donnée.
 
@@ -440,8 +440,8 @@ Suppression de métadonnées pour une donnée.
 ```julia-repl
 ```
 """
-function postdatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postdatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "metadatas")
   try
     # Envoi de la requête
@@ -474,7 +474,7 @@ export postdatas_metadatas
 
 
 """
-    deletedatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    deletedatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Suppression de métadonnées pour une donnée.
 
@@ -482,8 +482,8 @@ Suppression de métadonnées pour une donnée.
 ```julia-repl
 ```
 """
-function deletedatas_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletedatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "metadatas")
   try
     # Envoi de la requête
@@ -516,7 +516,7 @@ export deletedatas_metadatas
 
 
 """
-    getdatas_relations(identifier::String, headers::Dict, apiTest::Bool=false)
+    getdatas_relations(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération de la liste des relations d'une donnée.
 
@@ -524,8 +524,8 @@ Récupération de la liste des relations d'une donnée.
 ```julia-repl
 ```
 """
-function getdatas_relations(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_relations(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "relations")
   try
     # Envoi de la requête
@@ -558,7 +558,7 @@ export getdatas_relations
 
 
 """
-    postdatas_relations(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    postdatas_relations(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Ajout de relations sur une donnée.
 
@@ -566,8 +566,8 @@ Ajout de relations sur une donnée.
 ```julia-repl
 ```
 """
-function postdatas_relations(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postdatas_relations(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "relations")
   try
     # Envoi de la requête
@@ -600,7 +600,7 @@ export postdatas_relations
 
 
 """
-    deletedatas_relations(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    deletedatas_relations(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Suppression des relations sur une donnée.
 
@@ -608,8 +608,8 @@ Suppression des relations sur une donnée.
 ```julia-repl
 ```
 """
-function deletedatas_relations(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletedatas_relations(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "relations")
   try
     # Envoi de la requête
@@ -642,7 +642,7 @@ export deletedatas_relations
 
 
 """
-    getdatas_rights(identifier::String, headers::Dict, apiTest::Bool=false)
+    getdatas_rights(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération des groupes et des utilisateurs ayant des droits sur la donnée.
 
@@ -650,8 +650,8 @@ Récupération des groupes et des utilisateurs ayant des droits sur la donnée.
 ```julia-repl
 ```
 """
-function getdatas_rights(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_rights(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "rights")
   try
     # Envoi de la requête
@@ -684,7 +684,7 @@ export getdatas_rights
 
 
 """
-    postdatas_rights(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    postdatas_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Ajout de droits sur une donnée.
 
@@ -692,8 +692,8 @@ Ajout de droits sur une donnée.
 ```julia-repl
 ```
 """
-function postdatas_rights(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postdatas_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "rights")
   try
     # Envoi de la requête
@@ -726,7 +726,7 @@ export postdatas_rights
 
 
 """
-    deletedatas_rights(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    deletedatas_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Suppression des droits pour un utilisateur ou un groupe d'utilisateurs sur une donnée.
 
@@ -734,8 +734,8 @@ Suppression des droits pour un utilisateur ou un groupe d'utilisateurs sur une d
 ```julia-repl
 ```
 """
-function deletedatas_rights(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletedatas_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "rights")
   try
     # Envoi de la requête
@@ -768,7 +768,7 @@ export deletedatas_rights
 
 
 """
-    getdatas_collections(identifier::String, headers::Dict, apiTest::Bool=false)
+    getdatas_collections(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération de la liste des collections contenant la donnée.
 
@@ -776,8 +776,8 @@ Récupération de la liste des collections contenant la donnée.
 ```julia-repl
 ```
 """
-function getdatas_collections(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_collections(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "collections")
   try
     # Envoi de la requête
@@ -810,7 +810,7 @@ export getdatas_collections
 
 
 """
-    postdatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    postdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Ajout d'une donnée dans un ensemble de collections.
 
@@ -818,8 +818,8 @@ Ajout d'une donnée dans un ensemble de collections.
 ```julia-repl
 ```
 """
-function postdatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "collections")
   try
     # Envoi de la requête
@@ -852,7 +852,7 @@ export postdatas_collections
 
 
 """
-    putdatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    putdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Remplacement de l'ensemble des collections d'une donnée.
 
@@ -860,8 +860,8 @@ Remplacement de l'ensemble des collections d'une donnée.
 ```julia-repl
 ```
 """
-function putdatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "collections")
   try
     # Envoi de la requête
@@ -893,7 +893,7 @@ export putdatas_collections
 
 
 """
-    deletedatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    deletedatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Suppression d'une donnée d'un ensemble de collections.
 
@@ -901,8 +901,8 @@ Suppression d'une donnée d'un ensemble de collections.
 ```julia-repl
 ```
 """
-function deletedatas_collections(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletedatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "collections")
   try
     # Envoi de la requête
@@ -935,7 +935,7 @@ export deletedatas_collections
 
 
 """
-    getdatas_status(identifier::String, headers::Dict, apiTest::Bool=false)
+    getdatas_status(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération du statut d'une donnée.
 
@@ -943,8 +943,8 @@ Récupération du statut d'une donnée.
 ```julia-repl
 ```
 """
-function getdatas_status(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_status(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "status")
   try
     # Envoi de la requête
@@ -977,7 +977,7 @@ export getdatas_status
 
 
 """
-    putdatas_status(identifier::String, status::String, headers::Dict, apiTest::Bool=false)
+    putdatas_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
 
 Changement du statut d'une donnée.
 
@@ -985,8 +985,8 @@ Changement du statut d'une donnée.
 ```julia-repl
 ```
 """
-function putdatas_status(identifier::String, status::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putdatas_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", identifier, "status", status)
   try
     # Envoi de la requête
@@ -1018,7 +1018,7 @@ export putdatas_status
 
 
 """
-    getdatas_uploads(headers::Dict, apiTest::Bool=false)
+    getdatas_uploads(headers::Dict; apitest::Bool=false)
 
 Récupération pour un utilisateur de la liste des objets fichiers déposés non encore associés à une donnée.
 
@@ -1026,8 +1026,8 @@ Récupération pour un utilisateur de la liste des objets fichiers déposés non
 ```julia-repl
 ```
 """
-function getdatas_uploads(headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getdatas_uploads(headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", "uploads")
   try
     # Envoi de la requête
@@ -1060,7 +1060,7 @@ export getdatas_uploads
 
 
 """
-    deletedatas_uploads(fileIdentifier::String, headers::Dict, apiTest::Bool=false)
+    deletedatas_uploads(fileIdentifier::String, headers::Dict; apitest::Bool=false)
 
 Suppression d'un fichier déposé dans l'espace temporaire
 
@@ -1068,8 +1068,8 @@ Suppression d'un fichier déposé dans l'espace temporaire
 ```julia-repl
 ```
 """
-function deletedatas_uploads(fileIdentifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletedatas_uploads(fileIdentifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "datas", "uploads", fileIdentifier)
   try
     # Envoi de la requête
@@ -1101,7 +1101,7 @@ export deletedatas_uploads
 
 
 """
-    downloaddatas_files(identifier::String, outputDir::String, header::Dict, apiTest::Bool=false)
+    downloaddatas_files(identifier::String, outputDir::String, header::Dict; apitest::Bool=false)
 
 Téléchargement des fichiers déposés associés à une donnée.
 
@@ -1109,8 +1109,8 @@ Téléchargement des fichiers déposés associés à une donnée.
 ```julia-repl
 ```
 """
-function downloaddatas_files(identifier::String, outputDir::String, header::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function downloaddatas_files(identifier::String, outputDir::String, header::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "download", "datas", identifier, "files?extension=zip")
   output = joinpath(outputDir, HTTP.escapeuri(identifier)*".zip")
   try

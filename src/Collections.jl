@@ -3,21 +3,21 @@ using HTTP
 using JSON
 
 """
-    getcollections(identifier::String, headers::Dict, apiTest=false)
+    getcollections(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération des informations sur une collection.
 
 # exemple
 ```julia-repl
-julia> getcollections(identifier, headers, true)
+julia> getcollections(identifier, headers, apitest=true)
 Dict{String, Any} with 3 entries:
   "body"      => Dict{String, Any}("haveAccessibleData"=>false, "websitePrefix"=>"", "isDepositor"=>true, "isOwner"=>true, "depositor"=>Dic…
   "status"    => 200
   "isSuccess" => true
 ```
 """
-function getcollections(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getcollections(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier)
   try
     # Envoi de la requête
@@ -49,7 +49,7 @@ end
 export getcollections
 
 """
-    putcollections(identifier::String, headers::Dict, body::Dict, apiTest=false)
+    putcollections(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Modification des informations d'une collection.
 
@@ -57,8 +57,8 @@ Modification des informations d'une collection.
 ```julia-repl
 ```
 """
-function putcollections(identifier::String, headers::Dict, body::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putcollections(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier)
   try
     # Envoi de la requête
@@ -90,7 +90,7 @@ export putcollections
 
 
 """
-    deletecollections(identifier::String, headers::Dict, apiTest=false)
+    deletecollections(identifier::String, headers::Dict; apitest::Bool=false)
 
 Suppression d'une collection.
 
@@ -98,8 +98,8 @@ Suppression d'une collection.
 ```julia-repl
 ```
 """
-function deletecollections(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletecollections(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier)
   try
     # Envoi de la requête
@@ -131,7 +131,7 @@ export deletecollections
 
 
 """
-    postcollections(headers::Dict, body::Dict, apiTest::Bool=false)
+    postcollections(headers::Dict, body::Dict; apitest::Bool=false)
 
 Création d'une nouvelle collection.
 
@@ -139,8 +139,8 @@ Création d'une nouvelle collection.
 ```julia-repl
 ```
 """
-function postcollections(headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postcollections(headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections")
   try
     # Envoi de la requête
@@ -173,7 +173,7 @@ export postcollections
 
 
 """
-    getcollections_datas(identifier::String, params::Array, headers::Dict, apiTest::Bool=false)
+    getcollections_datas(identifier::String, params::Array, headers::Dict; apitest::Bool=false)
 
 Récupération de la liste paginée des données contenues dans la collection.
 
@@ -181,8 +181,8 @@ Récupération de la liste paginée des données contenues dans la collection.
 ```julia-repl
 ```
 """
-function getcollections_datas(identifier::String, params::Array, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getcollections_datas(identifier::String, params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "datas?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
@@ -215,7 +215,7 @@ export getcollections_datas
 
 
 """
-    postcollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    postcollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Ajout d'une liste de données dans une collection.
 
@@ -223,8 +223,8 @@ Ajout d'une liste de données dans une collection.
 ```julia-repl
 ```
 """
-function postcollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postcollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "datas")
   try
     # Envoi de la requête
@@ -256,7 +256,7 @@ end
 export postcollections_datas
 
 """
-    deletecollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    deletecollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Suppression d'une liste de données d'une collection.
 
@@ -264,8 +264,8 @@ Suppression d'une liste de données d'une collection.
 ```julia-repl
 ```
 """
-function deletecollections_datas(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletecollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "datas")
   try
     # Envoi de la requête
@@ -298,7 +298,7 @@ export deletecollections_datas
 
 
 """
-    getcollections_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
+    getcollections_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération des métadonnées d'une collection.
 
@@ -306,8 +306,8 @@ Récupération des métadonnées d'une collection.
 ```julia-repl
 ```
 """
-function getcollections_metadatas(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getcollections_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "metadatas")
   try
     # Envoi de la requête
@@ -340,7 +340,7 @@ export getcollections_metadatas
 
 
 """
-    postcollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    postcollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Ajout d'une nouvelle métadonnée à une collection.
 
@@ -348,8 +348,8 @@ Ajout d'une nouvelle métadonnée à une collection.
 ```julia-repl
 ```
 """
-function postcollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postcollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "metadatas")
   try
     # Envoi de la requête
@@ -382,7 +382,7 @@ export postcollections_metadatas
 
 
 """
-    deletecollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    deletecollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Suppression de métadonnées pour une collection.
 
@@ -390,8 +390,8 @@ Suppression de métadonnées pour une collection.
 ```julia-repl
 ```
 """
-function deletecollections_metadatas(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletecollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "metadatas")
   try
     # Envoi de la requête
@@ -423,7 +423,7 @@ end
 export deletecollections_metadatas
 
 """
-    getcollections_rights(identifier::String, headers::Dict, apiTest::Bool=false)
+    getcollections_rights(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération des utilisateurs et des groupes ayant des droits sur la collection.
 
@@ -431,8 +431,8 @@ Récupération des utilisateurs et des groupes ayant des droits sur la collectio
 ```julia-repl
 ```
 """
-function getcollections_rights(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getcollections_rights(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "rights")
   try
     # Envoi de la requête
@@ -465,7 +465,7 @@ export getcollections_rights
 
 
 """
-    postcollections_rights(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
+    postcollections_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
 Ajout de droits sur une collection.
 
@@ -473,8 +473,8 @@ Ajout de droits sur une collection.
 ```julia-repl
 ```
 """
-function postcollections_rights(identifier::String, headers::Dict, body::Array, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postcollections_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "rights")
   try
     # Envoi de la requête
@@ -507,7 +507,7 @@ export postcollections_rights
 
 
 """
-    deletecollections_rights(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
+    deletecollections_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 Suppression des droits pour utilisateur ou un groupe d'utilisateurs sur une collection.
 
@@ -515,8 +515,8 @@ Suppression des droits pour utilisateur ou un groupe d'utilisateurs sur une coll
 ```julia-repl
 ```
 """
-function deletecollections_rights(identifier::String, headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletecollections_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "rights")
   try
     # Envoi de la requête
@@ -549,7 +549,7 @@ export deletecollections_rights
 
 
 """
-    getcollections_status(identifier::String, headers::Dict, apiTest::Bool=false)
+    getcollections_status(identifier::String, headers::Dict; apitest::Bool=false)
 
 Récupération du statut d'une collection.
 
@@ -557,8 +557,8 @@ Récupération du statut d'une collection.
 ```julia-repl
 ```
 """
-function getcollections_status(identifier::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getcollections_status(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "status")
   try
     # Envoi de la requête
@@ -591,7 +591,7 @@ export getcollections_status
 
 
 """
-    putcollections_status(identifier::String, status::String, headers::Dict, apiTest::Bool=false)
+    putcollections_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
 
 Changement du statut d'une collection.
 
@@ -599,8 +599,8 @@ Changement du statut d'une collection.
 ```julia-repl
 ```
 """
-function putcollections_status(identifier::String, status::String, headers::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putcollections_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "collections", identifier, "status", status)
   try
     # Envoi de la requête

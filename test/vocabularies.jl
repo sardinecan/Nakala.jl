@@ -1,10 +1,10 @@
 using Test
-@test Nakala.getvocabularies_licenses(["q" => "public"], true)["status"] == 200
-@test Nakala.getvocabularies_languages([:code => "fr"], true)["status"] == 200
-@test Nakala.getvocabularies_countryCodes([:q => "fr"], true)["status"] == 200
-@test Nakala.getvocabularies_dataStatuses(true)["status"] == 200
-@test Nakala.getvocabularies_collectionStatuses(true)["status"] == 200
-@test Nakala.getvocabularies_properties(true)["status"] == 200
-@test Nakala.getvocabularies_datatypes(true)["status"] == 200
-@test Nakala.getvocabularies_metadatatypes(true)["status"] == 200
-@test Nakala.getvocabularies_dcmitypes(true)["status"] == 200
+@test Nakala.getvocabularies_licenses(["q" => "public"], apitest=true)["status"] == 200
+@test Nakala.getvocabularies_languages([:code => "fr"], apitest=true)["status"] == 200
+@test Nakala.getvocabularies_countryCodes([:q => "fr"], apitest=true)["status"] == 200
+@test Nakala.getvocabularies_dataStatuses(apitest=true)["status"] == 200
+@test Nakala.getvocabularies_collectionStatuses(apitest=true)["status"] == 200
+@test Nakala.getvocabularies_properties(apitest=true)["status"] == 200
+@test Nakala.getvocabularies_datatypes(apitest=true)["status"] == 200
+@test Nakala.getvocabularies_metadatatypes(apitest=true)["status"] == 200
+@test Nakala.getvocabularies_dcmitypes(apitest=true)["status"] == 200

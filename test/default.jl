@@ -9,7 +9,7 @@ apikey = "01234567-89ab-cdef-0123-456789abcdef" #public key for test api
 # dépot d'un fichier
 headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
 file = "$path/testdata/file.txt"
-postdatas_uploads_response = Nakala.Datas.postdatas_uploads(file, headers, true)
+postdatas_uploads_response = Nakala.Datas.postdatas_uploads(file, headers, apitest=true)
 sha1 = postdatas_uploads_response["body"]["sha1"]
 
 # création d'une donnée

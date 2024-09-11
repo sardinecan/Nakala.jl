@@ -4,7 +4,7 @@ using JSON
 
 
 """
-    getgroups_search(params::Array, headers::Dict, apiTest=false)
+    getgroups_search(params::Array, headers::Dict; apitest::Bool=false)
 
 
 
@@ -12,8 +12,8 @@ using JSON
 ```julia-repl
 ```
 """
-function getgroups_search(params::Array, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getgroups_search(params::Array, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "groups", "search?") * HTTP.URIs.escapeuri(params)
   try
     # Envoi de la requête
@@ -46,7 +46,7 @@ export getgroups_search
 
 
 """
-    getgroups(identifier::String, headers::Dict, apiTest=false)
+    getgroups(identifier::String, headers::Dict; apitest::Bool=false)
 
 
 
@@ -54,8 +54,8 @@ export getgroups_search
 ```julia-repl
 ```
 """
-function getgroups(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function getgroups(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "groups", identifier)
   try
     # Envoi de la requête
@@ -88,7 +88,7 @@ export getgroups
 
 
 """
-    putgroups(identifier::String, headers::Dict, body::Dict, apiTest=false)
+    putgroups(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
 
 
@@ -96,8 +96,8 @@ export getgroups
 ```julia-repl
 ```
 """
-function putgroups(identifier::String, headers::Dict, body::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function putgroups(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "groups", identifier)
   try
     # Envoi de la requête
@@ -129,7 +129,7 @@ export putgroups
 
 
 """
-    deletegroups(identifier::String, headers::Dict, apiTest=false)
+    deletegroups(identifier::String, headers::Dict; apitest::Bool=false)
 
 
 
@@ -137,8 +137,8 @@ export putgroups
 ```julia-repl
 ```
 """
-function deletegroups(identifier::String, headers::Dict, apiTest=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function deletegroups(identifier::String, headers::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "groups", identifier)
   try
     # Envoi de la requête
@@ -170,7 +170,7 @@ export deletegroups
 
 
 """
-    postgroups(headers::Dict, body::Dict, apiTest::Bool=false)
+    postgroups(headers::Dict, body::Dict; apitest::Bool=false)
 
 
 
@@ -178,8 +178,8 @@ export deletegroups
 ```julia-repl
 ```
 """
-function postgroups(headers::Dict, body::Dict, apiTest::Bool=false)
-  apiTest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
+function postgroups(headers::Dict, body::Dict; apitest::Bool=false)
+  apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
   url = joinpath(apiurl, "groups")
   try
     # Envoi de la requête
