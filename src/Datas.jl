@@ -451,10 +451,20 @@ export deletedatas
 """
     getdatas_files(identifier::String, headers::Dict; apitest::Bool=false)
 
-Les métadonnées des fichiers associés à la donnée désignée par `identifier`.
+Récupère les métadonnées des fichiers associés à la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+Dict{Any, String} with 2 entries:
+  :accept     => "application/json"
+  "X-API-KEY" => "01234567-89ab-cdef-0123-456789"
+
+julia> Nakala.Datas.getdatas_files("10.34847/nkl.ce37irra", headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("name"=>"file.txt", "embargoed"=>"2024-09-01T00:00:00+02:00", "puid"=>nothing, "humanReadableEmbargoedDelay"=>Any[], "size"=>"13…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getdatas_files(identifier::String, headers::Dict; apitest::Bool=false)
@@ -493,10 +503,20 @@ export getdatas_files
 """
     getdatas_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération de la liste des métadonnées d'une donnée.
+Récupère la liste des métadonnées de la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> headers = Dict( "X-API-KEY" => apikey, :accept => "application/json" )
+Dict{Any, String} with 2 entries:
+  :accept     => "application/json"
+  "X-API-KEY" => "01234567-89ab-cdef-0123-456789"
+
+julia> Nakala.Datas.getdatas_metadatas("10.34847/nkl.e093t7t5", headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("typeUri"=>nothing, "propertyUri"=>"http://nakala.fr/terms#title", "lang"=>"fr", "value"=>"Ma donnée"), Dict{String, Any}("typeU…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getdatas_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
@@ -535,10 +555,24 @@ export getdatas_metadatas
 """
     postdatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Suppression de métadonnées pour une donnée.
+Ajoute des métadonnées à la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> # ajout d'un titre en anglais
+
+julia> body = Dict( :value => "My Data", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string" )
+Dict{Symbol, String} with 4 entries:
+  :value       => "My Data"
+  :propertyUri => "http://nakala.fr/terms#title"
+  :lang        => "en"
+  :typeUri     => "http://www.w3.org/2001/XMLSchema#string"
+
+julia> Nakala.Datas.deletedatas_metadatas(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1", "code"=>201)
+  "status"    => 201
+  "isSuccess" => true
 ```
 """
 function postdatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -577,11 +611,21 @@ export postdatas_metadatas
 """
     deletedatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Suppression de métadonnées pour une donnée.
+Supprime des métadonnées de la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
-```
+julia> body = Dict( :propertyUri => "http://nakala.fr/terms#title", :lang => "en" ) # on désigne ici le titre anglais de la donnée
+Dict{Symbol, String} with 2 entries:
+  :propertyUri => "http://nakala.fr/terms#title"
+  :lang        => "en"
+
+julia> Nakala.Datas.deletedatas_metadatas(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1 metadata deleted", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
+```    
 """
 function deletedatas_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -619,10 +663,15 @@ export deletedatas_metadatas
 """
     getdatas_relations(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération de la liste des relations d'une donnée.
+Récupère la liste des relations de la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Datas.getdatas_relations(identifier, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getdatas_relations(identifier::String, headers::Dict; apitest::Bool=false)
@@ -661,10 +710,21 @@ export getdatas_relations
 """
     postdatas_relations(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Ajout de relations sur une donnée.
+Ajoute des relations à la donnée désignée par `identifier`. Pour ajouter des relations à une donnée, cette dernière doit être publiée.
+
+Le `body` est un tableau de dictionnaires. Plusieurs relations peuvent donc être ajoutées avec la même requête.
 
 # exemple
 ```julia-repl
+julia> body = [ Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test") ]
+1-element Vector{Dict{Symbol, String}}:
+ Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test")
+
+julia> Nakala.Datas.postdatas_relations(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1 relation added", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function postdatas_relations(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
@@ -703,10 +763,22 @@ export postdatas_relations
 """
     deletedatas_relations(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Suppression des relations sur une donnée.
+Supprime des relations attachées à la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = Dict(:type => "Cites", :repository => "hal", :target => "hal-02464318v1", :comment => "relation test")
+Dict{Symbol, String} with 4 entries:
+  :type       => "Cites"
+  :repository => "hal"
+  :target     => "hal-02464318v1"
+  :comment    => "relation test"
+
+julia> Nakala.Datas.deletedatas_relations(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1 relation deleted", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function deletedatas_relations(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -745,10 +817,15 @@ export deletedatas_relations
 """
     getdatas_rights(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération des groupes et des utilisateurs ayant des droits sur la donnée.
+Récupère les groupes et les utilisateurs ayant des droits sur la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Datas.getdatas_rights(identifier, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("role"=>"ROLE_DEPOSITOR", "name"=>"Test Nakala", "photo"=>"http://mynakala.photo", "id"=>"26cef362-5bef-11eb-99d1-5254000a365d",…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getdatas_rights(identifier::String, headers::Dict; apitest::Bool=false)
@@ -787,10 +864,19 @@ export getdatas_rights
 """
     postdatas_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Ajout de droits sur une donnée.
+Ajoute des droits à la donnée désignée par identifier.
 
 # exemple
 ```julia-repl
+julia> body = [ Dict( :id => userid, :role => "ROLE_READER" ) ]
+1-element Vector{Dict{Symbol, String}}:
+ Dict(:id => "c7e9bb15-6b4e-4e09-b234-ae7b13abcdef", :role => "ROLE_READER")
+
+julia> Nakala.Datas.postdatas_rights(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1 right added", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function postdatas_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
@@ -829,10 +915,19 @@ export postdatas_rights
 """
     deletedatas_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Suppression des droits pour un utilisateur ou un groupe d'utilisateurs sur une donnée.
+Supprime des droits pour un utilisateur ou un groupe d'utilisateurs sur la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = [ Dict( :id => userid, :role => "ROLE_READER" ) ]
+1-element Vector{Dict{Symbol, String}}:
+ Dict(:id => "c7e9bb15-6b4e-4e09-b234-ae7b13abcdef", :role => "ROLE_READER")
+
+julia> Nakala.Datas.deletedatas_rights(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1 right deleted", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function deletedatas_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -871,11 +966,7 @@ export deletedatas_rights
 """
     getdatas_collections(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération de la liste des collections contenant la donnée.
-
-# exemple
-```julia-repl
-```
+Récupère la liste des collections contenant la donnée désignée par `identifier`.
 """
 function getdatas_collections(identifier::String, headers::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -913,11 +1004,7 @@ export getdatas_collections
 """
     postdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Ajout d'une donnée dans un ensemble de collections.
-
-# exemple
-```julia-repl
-```
+Ajoute la donnée désignée par `identifier` dans un ensemble de collections.
 """
 function postdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -955,11 +1042,7 @@ export postdatas_collections
 """
     putdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Remplacement de l'ensemble des collections d'une donnée.
-
-# exemple
-```julia-repl
-```
+Remplace l'ensemble des collections auxquelles appartient la donnée désignée par `identifier`.
 """
 function putdatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -996,11 +1079,7 @@ export putdatas_collections
 """
     deletedatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Suppression d'une donnée d'un ensemble de collections.
-
-# exemple
-```julia-repl
-```
+Supprime la donnée désignée par `identifier` d'un ensemble de collections.
 """
 function deletedatas_collections(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -1038,11 +1117,7 @@ export deletedatas_collections
 """
     getdatas_status(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération du statut d'une donnée.
-
-# exemple
-```julia-repl
-```
+Récupère le statut de la donnée désignée par `identifier`.
 """
 function getdatas_status(identifier::String, headers::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -1080,11 +1155,7 @@ export getdatas_status
 """
     putdatas_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
 
-Changement du statut d'une donnée.
-
-# exemple
-```julia-repl
-```
+Change le statut de la donnée désignée par `ìdentifier`.
 """
 function putdatas_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -1121,11 +1192,7 @@ export putdatas_status
 """
     getdatas_uploads(headers::Dict; apitest::Bool=false)
 
-Récupération pour un utilisateur de la liste des objets fichiers déposés non encore associés à une donnée.
-
-# exemple
-```julia-repl
-```
+Récupère la liste des objets fichiers déposés par un utilisateur non encore associés à une donnée.
 """
 function getdatas_uploads(headers::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -1163,11 +1230,7 @@ export getdatas_uploads
 """
     deletedatas_uploads(fileIdentifier::String, headers::Dict; apitest::Bool=false)
 
-Suppression d'un fichier déposé dans l'espace temporaire
-
-# exemple
-```julia-repl
-```
+Supprimer le fichier `fileIdentifier` déposé dans l'espace temporaire.
 """
 function deletedatas_uploads(fileIdentifier::String, headers::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -1204,11 +1267,7 @@ export deletedatas_uploads
 """
     downloaddatas_files(identifier::String, outputDir::String, header::Dict; apitest::Bool=false)
 
-Téléchargement des fichiers déposés associés à une donnée.
-
-# exemple
-```julia-repl
-```
+Télécharge les fichiers déposés associés à la donnée désignée par `identifier` dans le répertoier `outputDir`.
 """
 function downloaddatas_files(identifier::String, outputDir::String, header::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
