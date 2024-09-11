@@ -1,6 +1,5 @@
 module Groups
-using HTTP
-using JSON
+using HTTP, JSON
 
 
 """

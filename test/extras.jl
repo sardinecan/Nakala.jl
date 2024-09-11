@@ -1,5 +1,4 @@
-using Test
-using HTTP, JSON, CSV, DataFrames
+using Test, Nakala
 
 
 path = @__DIR__

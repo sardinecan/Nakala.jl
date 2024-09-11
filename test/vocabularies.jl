@@ -1,5 +1,8 @@
-using Test
-@test Nakala.getvocabularies_licenses(["q" => "public"], apitest=true)["status"] == 200
+using Test, Nakala
+
+Nakala.Vocabularies.getvocabularies_licenses(["q" => "public"], apitest=true)
+
+@test Nakala.Vocabularies.getvocabularies_licenses(["q" => "public"], apitest=true)["status"] == 200
 @test Nakala.getvocabularies_languages([:code => "fr"], apitest=true)["status"] == 200
 @test Nakala.getvocabularies_countryCodes([:q => "fr"], apitest=true)["status"] == 200
 @test Nakala.getvocabularies_dataStatuses(apitest=true)["status"] == 200

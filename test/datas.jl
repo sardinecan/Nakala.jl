@@ -1,7 +1,4 @@
-using Test
-using JSON
-using Downloads
-using Nakala.Utilities
+using Test, Nakala
 
 path = @__DIR__
 apikey = "01234567-89ab-cdef-0123-456789abcdef" # tnakala user public key for Nakala test api
@@ -92,8 +89,6 @@ postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 identifier = createData()[:dataIdentifier]
 getdatas_response = Nakala.Datas.getdatas(identifier, headers, apitest=true)
 @test Nakala.Datas.getdatas(identifier, headers, apitest=true)["status"] == 200
-
-
 
 ## Modification des informations d'une donnée.==#
 identifier = createData()[:dataIdentifier]

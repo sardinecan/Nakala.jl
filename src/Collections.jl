@@ -1,6 +1,5 @@
 module Collections
-using HTTP
-using JSON
+using HTTP, JSON
 
 """
     getcollections(identifier::String, headers::Dict; apitest::Bool=false)

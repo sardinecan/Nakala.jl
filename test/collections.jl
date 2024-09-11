@@ -1,4 +1,4 @@
-using Test
+using Test, Nakala
 
 path = @__DIR__
 apikey = "01234567-89ab-cdef-0123-456789abcdef" #public key for test api

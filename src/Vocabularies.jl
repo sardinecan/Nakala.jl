@@ -1,5 +1,5 @@
 module Vocabularies
-
+using HTTP, JSON
 
 """
     getvocabularies_licenses(params::Array; apitest::Bool=false)

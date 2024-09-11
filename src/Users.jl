@@ -1,6 +1,5 @@
 module Users
-using HTTP
-using JSON
+using HTTP, JSON
 
 
 """

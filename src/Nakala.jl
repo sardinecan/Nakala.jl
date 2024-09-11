@@ -1,11 +1,5 @@
 module Nakala
-
-import HTTP
-import JSON
-import Downloads
-import CSV
-import DataFrames
-
+#using HTTP, JSON, Downloads, CSV, DataFrames
 
 include("./Utilities.jl")
 
@@ -28,4 +22,5 @@ using .Users
 using .Default 
 using .Utilities
 using .Extras
+
 end # module Nakala

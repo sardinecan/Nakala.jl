@@ -1,6 +1,5 @@
 module Default
-using HTTP
-using JSON
+using HTTP, JSON
 
 """
     getresourceprocessing(identifier::String, headers::Dict, apitest::Bool=false)

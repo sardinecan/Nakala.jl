@@ -1,14 +1,18 @@
 module Search
-using HTTP
-using JSON
+using HTTP, JSON
 
 """
     search_authors(params::Array; apitest::Bool=false)
 
-Récupération des auteurs associés aux données de Nakala.
+Recherche des auteurs associés aux données de Nakala et retourne un dictionnaire. La réponse du serveur correspond à la valeur de la clé `body`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Search.search_authors([:q=>"Hugo"], apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function search_authors(params::Array; apitest::Bool=false)
@@ -48,10 +52,15 @@ export search_authors
 """
     search(params::Array; apitest::Bool=false)
 
-Recherche des données Nakala.
+Recherche des données Nakala et retourne un dictionnaire. La réponse du serveur correspond à la valeur de la clé `body`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Search.search([:q=>"édition", :fq => ""], apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("totalResults"=>40, "datas"=>Any[Dict{String, Any}("collectionsIds"=>Any["10.34847/nkl.6d3ei1wy"], "stat…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function search(params::Array; apitest::Bool=false)
