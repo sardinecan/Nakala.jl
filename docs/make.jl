@@ -7,6 +7,7 @@ makedocs(;
     authors = "J. Morvan <morvan.josselin@gmail.com>",
     pages = [
         "Nakala.jl" => "index.md",
+        "Getting started" => "getting_started.md",
         "Modules" => [
             "Datas" => "modules/datas.md",
             "Collections" => "modules/collections.md",
@@ -14,7 +15,8 @@ makedocs(;
             "Groups" => "modules/groups.md",
             "Search" => "modules/search.md",
             "Vocabularies" => "modules/vocabularies.md",
-            "Default" => "modules/default.md"           
+            "Default" => "modules/default.md",
+            "Extras" => "modules/extras.md"
         ]
     ],
     sitename = "Nakala.jl"
