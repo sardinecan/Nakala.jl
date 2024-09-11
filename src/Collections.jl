@@ -54,6 +54,23 @@ Modifie les informations de la collection désignée par `ìdentifier.
 
 # exemple
 ```julia-repl
+julia> body = Dict(
+  :status => "public",
+  :metas => [Dict(:value => "Test de postcollections", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),],
+  :datas => [],
+  :rights => []
+)
+Dict{Symbol, Any} with 4 entries:
+  :status => "public"
+  :datas  => Any[]
+  :rights => Any[]
+  :metas  => [Dict(:value=>"Test de putcollections", :propertyUri=>"http://nakala.fr/terms#title", :lang=>"en", :typeUri=>"http://www.w3.org/2001/XMLSchema#string")]
+
+julia> Nakala.Collections.putcollections(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"Collection created", "payload"=>Dict{String, Any}("id"=>"10.34847/nkl.542485b0"), "code"=>201)
+  "status"    => 201
+  "isSuccess" => true
 ```
 """
 function putcollections(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -95,6 +112,11 @@ Supprime la collection désignée par `ìdentifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Collections.deletecollections(identifier, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => ""
+  "status"    => 204
+  "isSuccess" => true
 ```
 """
 function deletecollections(identifier::String, headers::Dict; apitest::Bool=false)
@@ -136,6 +158,23 @@ Crée une nouvelle collection.
 
 # exemple
 ```julia-repl
+julia> headers = Dict(
+  "X-API-KEY" => apikey,
+  "Content-Type" => "application/json"
+)
+
+julia> body = Dict(
+  :status => "public",
+  :metas => [Dict(:value => "Collection", :propertyUri => "http://nakala.fr/terms#title", :lang => "fr", :typeUri => "http://www.w3.org/2001/XMLSchema#string"),],
+  :datas => [],
+  :rights => []
+)
+
+julia> Nakala.Collections.postcollections(headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"Collection created", "payload"=>Dict{String, Any}("id"=>"10.34847/nkl.e73a86ab"), "code"=>201)
+  "status"    => 201
+  "isSuccess" => true
 ```
 """
 function postcollections(headers::Dict, body::Dict; apitest::Bool=false)
@@ -178,6 +217,13 @@ Récupère la liste paginée des données contenues dans la collection désigné
 
 # exemple
 ```julia-repl
+julia> params = [ :page => 1, :limit => 10 ]
+
+julia> Nakala.Collections.getcollections_datas(identifier, params, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("currentPage"=>1, "lastPage"=>1, "total"=>1, "data"=>Any[Dict{String, Any}("uri"=>"https://doi.org/10.34847/nkl.bcdblt35", "status"=…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getcollections_datas(identifier::String, params::Array, headers::Dict; apitest::Bool=false)
@@ -220,6 +266,15 @@ Ajoute une liste de données à la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = [ data_identifier ]
+1-element Vector{String}:
+  "10.34847/nkl.bcdblt35"
+
+julia> Nakala.Collections.postcollections_datas(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"Data added in the collection", "code"=>201)
+  "status"    => 201
+  "isSuccess" => true
 ```
 """
 function postcollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
@@ -261,6 +316,15 @@ Supprime une liste de données de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = [ data_identifier ]
+1-element Vector{String}:
+  "10.34847/nkl.bcdblt35"
+
+julia> Nakala.Collections.deletecollections_datas(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"Data removed form the collection", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function deletecollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
@@ -303,6 +367,11 @@ Récupère les métadonnées de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Collections.getcollections_metadatas(identifier, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("typeUri"=>nothing, "propertyUri"=>"http://nakala.fr/terms#title", "lang"=>"fr", "value"=>"Ma collection")]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getcollections_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
@@ -345,6 +414,18 @@ Ajoute nouvelle métadonnée à la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = Dict(:value => "My collection", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string")
+Dict{Symbol, String} with 4 entries:
+  :value       => "My collection"
+  :propertyUri => "http://nakala.fr/terms#title"
+  :lang        => "en"
+  :typeUri     => "http://www.w3.org/2001/XMLSchema#string"
+
+julia> Nakala.Collections.postcollections_metadatas(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1", "code"=>201)
+  "status"    => 201
+  "isSuccess" => true
 ```
 """
 function postcollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -387,6 +468,18 @@ Supprime des métadonnées de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = Dict(:value => "My collection", :propertyUri => "http://nakala.fr/terms#title", :lang => "en", :typeUri => "http://www.w3.org/2001/XMLSchema#string")
+Dict{Symbol, String} with 4 entries:
+  :value       => "My collection"
+  :propertyUri => "http://nakala.fr/terms#title"
+  :lang        => "en"
+  :typeUri     => "http://www.w3.org/2001/XMLSchema#string"
+
+julia> Nakala.Collections.deletecollections_metadatas(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => ""
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function deletecollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -428,6 +521,11 @@ Récupère les utilisateurs et les groupes ayant des droits sur la collection d�
 
 # exemple
 ```julia-repl
+julia> Nakala.Collections.getcollections_rights(identifier, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("role"=>"ROLE_DEPOSITOR", "name"=>"Test Nakala", "photo"=>"http://mynakala.photo", "id"=>"26cef362-5bef-11eb-99d1-5254000a365d",…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getcollections_rights(identifier::String, headers::Dict; apitest::Bool=false)
@@ -470,6 +568,15 @@ Ajoute des droits sur la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> body = [ Dict( :id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1234", :role => "ROLE_READER" ) ]
+1-element Vector{Dict{Symbol, String}}:
+ Dict(:id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f3b", :role => "ROLE_READER")
+
+julia> Nakala.Collections.postcollections_rights(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1 right added", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function postcollections_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
@@ -512,6 +619,15 @@ Supprime les droits d'un utilisateur ou d'un groupe d'utilisateurs sur la collec
 
 # exemple
 ```julia-repl
+julia> body = Dict( :id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f321", :role => "ROLE_READER" )
+1-element Vector{Dict{Symbol, String}}:
+ Dict(:id => "c7e9bb15-6b4e-4e09-b234-ae7b13ac1f321", :role => "ROLE_READER")
+
+julia> Nakala.Collections.deletecollections_rights(identifier, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("message"=>"1 right deleted", "code"=>200)
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function deletecollections_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -554,6 +670,11 @@ Récupère le statut de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Collections.getcollections_status(identifier, headers)
+Dict{String, Any} with 3 entries:
+  "body"      => "private"
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getcollections_status(identifier::String, headers::Dict; apitest::Bool=false)
@@ -596,6 +717,7 @@ Modifie le statut de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Collections.putcollections_status(identifier, "public", headers)
 ```
 """
 function putcollections_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
