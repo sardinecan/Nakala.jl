@@ -50,7 +50,7 @@ export getcollections
 """
     putcollections(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Modifie les informations de la collection désignée par `ìdentifier.
+Modifie les informations de la collection désignée par `identifier.
 
 # exemple
 ```julia-repl
@@ -108,7 +108,7 @@ export putcollections
 """
     deletecollections(identifier::String, headers::Dict; apitest::Bool=false)
 
-Supprime la collection désignée par `ìdentifier`.
+Supprime la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -213,7 +213,7 @@ export postcollections
 """
     getcollections_datas(identifier::String, params::Array, headers::Dict; apitest::Bool=false)
 
-Récupère la liste paginée des données contenues dans la collection désignée par `ìdentifier`.
+Récupère la liste paginée des données contenues dans la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl

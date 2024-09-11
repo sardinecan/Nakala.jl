@@ -5,10 +5,16 @@ using HTTP, JSON
 """
     getusers_me(headers::Dict; apitest::Bool=false)
 
-Récupération des informations sur l'utilisateur courant.
+Récupère les informations de l'utilisateur courant.
 
 # exemple
 ```julia-repl
+julia> headers = Dict( "X-API-KEY" => apikey, "Content-Type" => "application/json" )
+julia> Nakala.Users.getusers_me(headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("firstLogin"=>"2020-03-18T11:20:00+01:00", "username"=>"tnakala", "surname"=>"Nakala", "userGroupId"=>"26cef362-5bef-11eb-99d1…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getusers_me(headers::Dict; apitest::Bool=false)
@@ -47,10 +53,16 @@ export getusers_me
 """
     putusers_me(headers::Dict, body::Dict; apitest::Bool=false)
 
-Mise à jour des informations sur l'utilisateur courant.
+Met à jour les informations de l'utilisateur courant.
 
 # exemple
 ```julia-repl
+julia> body = Dict( :givenname => "Test", :surname => "Nakala", :mail => "nakala@huma-num.fr", :photo => "http://mynakala.photo" )
+julia> Nakala.Users.putusers_me(headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => ""
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function putusers_me(headers::Dict, body::Dict; apitest::Bool=false)
@@ -88,11 +100,7 @@ export putusers_me
 """
     putusers_me_apikey(headers::Dict; apitest::Bool=false)
 
-Mise à jour de la clé d'API de l'utilisateur courant.
-
-# exemple
-```julia-repl
-```
+Met à jour la clé d'API de l'utilisateur courant.
 """
 function putusers_me_apikey(headers::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -130,10 +138,29 @@ export putusers_me_apikey
 """
     postusers_datas(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Récupération des données accessibles par un utilisateur.
+Récupère les données accessibles par un utilisateur. Retourne les données d'un utilisateur en fonction du périmètre choisi (`scope`) :
+- deposited : les données déposées par l'utilisateur (ROLE_DEPOSITOR)
+- owned : les données dont l'utilisateur est propriétaire (ROLE_OWNER)
+- shared : les données partagées avec l'utilisateur (ROLE_ADMIN, ROLE_EDITOR ou ROLE_READER, mais pas ROLE_OWNER)
+- editable : les données modifiables par l'utilisateur (ROLE_OWNER, ROLE_ADMIN ou ROLE_EDITOR)
+- readable : les données lisibles par l'utilisateur (ROLE_OWNER, ROLE_ADMIN, ROLE_EDITOR ou ROLE_READER)
+- all
 
 # exemple
 ```julia-repl
+julia> scope = "deposited"
+
+julia> body = Dict(
+  :page => 1,
+  :orders => [ "creDate,desc" ],
+  :titleSearchLang => "fr"
+)
+
+julia> Nakala.Users.postusers_datas(scope, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("totalRecords"=>597, "data"=>Any[Dict{String, Any}("isDepositor"=>true, "isOwner"=>true, "depositor"=>Dict{String, Any}("name"=>"Tes…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function postusers_datas(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -172,11 +199,7 @@ export postusers_datas
 """
     getusers_datas_datatypes(params::Array, headers::Dict; apitest::Bool=false)
 
-Récupération des types des données accessibles par un utilisateur.
-
-# exemple
-```julia-repl
-```
+Récupère les types des données accessibles par un utilisateur.
 """
 function getusers_datas_datatypes(params::Array, headers::Dict; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"  
@@ -214,10 +237,21 @@ export getusers_datas_datatypes
 """
     getusers_datas_createdyears(params::Array, headers::Dict; apitest::Bool=false)
 
-Récupération des différentes années de création des données accessibles par un utilisateur.
+Récupère les différentes années de création des données accessibles par un utilisateur.
 
 # exemple
 ```julia-repl
+julia> params = [
+  :scope =>"all",
+  "collections[]" => "abc", # répéter pour que les collections passent dans l'url
+  "collections[]" => "def"
+]
+
+julia> Nakala.Users.getusers_datas_createdyears(params, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getusers_datas_createdyears(params::Array, headers::Dict; apitest::Bool=false)
@@ -256,10 +290,19 @@ export getusers_datas_createdyears
 """
     getusers_datas_statuses(params::Array, headers::Dict; apitest::Bool=false)
 
-Récupération des différents statuts des données accessibles par un utilisateur.
+Récupère les différents statuts des données accessibles par un utilisateur.
 
 # exemple
 ```julia-repl
+julia> params = [
+  :scope =>"all"
+]
+
+julia> Nakala.Users.getusers_datas_statuses(params, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any["embargoed", "moderated", "pending", "published"]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getusers_datas_statuses(params::Array, headers::Dict; apitest::Bool=false)
@@ -298,10 +341,24 @@ export getusers_datas_statuses
 """
     getusers_groups(scope::String, params::Array, headers::Dict; apitest::Bool=false)
 
-Récupération des groupes d'un utilisateur.
+Récupère les groupes d'un utilisateur.
 
 # exemple
 ```julia-repl
+julia> scope = "all"
+
+julia> params = [
+  :q => "nakala",
+  :page => 1,
+  :limit => 10,
+  :order => "datemodify,desc"
+]
+
+julia> Nakala.Users.getusers_groups(scope, params, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("totalRecords"=>3, "data"=>Any[Dict{String, Any}("isAdmin"=>true, "name"=>"Nakala.jl_2", "isMember"=>true, "users"=>Any[Dict{String,…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getusers_groups(scope::String, params::Array, headers::Dict; apitest::Bool=false)
@@ -340,10 +397,22 @@ export getusers_groups
 """
     postusers_collections(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Récupération des collections accessibles par un utilisateur.
+Récupère les collections accessibles par un utilisateur.
 
 # exemple
 ```julia-repl
+julia> scope = "owned"
+
+julia> body = Dict(
+  :page => 1,
+  :limit => 100
+)
+
+julia> Nakala.Users.postusers_collections(scope, headers, body, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("totalRecords"=>104, "data"=>Any[Dict{String, Any}("websitePrefix"=>"", "isDepositor"=>true, "isOwner"=>true, "depositor"=>Dict{Stri…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function postusers_collections(scope::String, headers::Dict, body::Dict; apitest::Bool=false)
@@ -382,10 +451,17 @@ export postusers_collections
 """
     getusers_collections_createdyears(params::Array, headers::Dict; apitest::Bool=false)
 
-Récupération des différentes années de création des collections accessibles par un utilisateur.
+Récupère les différentes années de création des collections accessibles par un utilisateur.
 
 # exemple
 ```julia-repl
+julia> params = [ :scope =>"all" ]
+
+julia> Nakala.Users.getusers_collections_createdyears(params, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any["2024"]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getusers_collections_createdyears(params::Array, headers::Dict; apitest::Bool=false)
@@ -424,10 +500,17 @@ export getusers_collections_createdyears
 """
     getusers_collections_statuses(params::Array, headers::Dict; apitest::Bool=false)
 
-Récupération des différents statuts des collections accessibles par un utilisateur.
+Récupère les différents statuts des collections accessibles par un utilisateur.
 
 # exemple
 ```julia-repl
+julia> params = [ :scope =>"all" ]
+
+julia> Nakala.Users.getusers_collections_statuses(params, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any["public", "private"]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getusers_collections_statuses(params::Array, headers::Dict; apitest::Bool=false)
