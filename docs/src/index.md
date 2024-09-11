@@ -15,6 +15,7 @@ Nakala.jl est construit autour de 7 modules correspondant aux *end-points* de l'
 - Default
 
 Pour exécuter les requêtes vous devez disposer d'une clé API Nakala, ou utiliser une clé publique avec l'API Test de Nakala. La clé doit être indiquée dans les `headers`, par exemple : 
+
 ```julia
 headers = Dict(
     "X-API-KEY" => apikey,
@@ -22,10 +23,11 @@ headers = Dict(
 )
 ```
 
+La très grande majorité des fonctions de ce package dispose d'un *keyword argument* `apitest`. Par défaut, les requêtes sont envoyées sur l'API de production. Cependant, si vous ajoutez l'argument `apitest=true` à votre fonction, la requête sera envoyée à l'API Test.
 
 Les fonctions retournent un dictionnaire Julia :
 
-- succès ou d'erreur HTTP
+- succès ou erreur HTTP
 ```julia
 Dict(
     "isSuccess" => true|false,
@@ -34,7 +36,7 @@ Dict(
 )
 ```
 
-- autre type d'erreur
+- autre erreur
 ```julia
 Dict(
     "isSuccess" => false,
@@ -43,8 +45,6 @@ Dict(
 ```
 
 La gestion des erreurs repose sur l'utilisation de `try/catch` afin de traiter les exceptions. Les erreurs HTTP (renvoyant un code et un message explicatif) sont distinguées des autres types d'erreurs, comme les échecs de connexion par exemple. Cette approche autorise une gestion efficace et claire des erreurs, facilitant ainsi la résolution des problèmes.
-
-La très grande majorité des fonctions de ce package dispose d'un *keyword argument* `apitest`. Par défaut, les requêtes sont envoyées sur l'API de production. Cependant, si vous ajoutez l'argument `apitest=true`, la requête sera envoyée à l'API Test.
 
 <!-- @todo 
     prise en charge XML
