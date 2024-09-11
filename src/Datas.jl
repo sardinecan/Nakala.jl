@@ -6,7 +6,7 @@ import ..Utilities: contains_key_value
 """
     postdatas_uploads(file::String, headers::Dict; apitest::Bool=false)
 
-Dépose un fichier sur l'espace temporaire de Nakala et retourne un dictionnaire. La réponse du serveur correspond à la valeur de la clé `body`.
+Dépose un fichier sur l'espace temporaire de Nakala.
 
 # exemple
 ```julia-repl
@@ -61,7 +61,7 @@ export postdatas_uploads
 """
     postdatas_files(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Ajoute un fichier à une donnée Nakala dont l'identifiant correspond à l'argument `identifier`. Au préalable, le fichier doit avoir été déposé sur l'espace temporaire de Nakala (`postdatas_uploads()`) et vous devez disposer de son identifiant `sha1`.
+Ajoute un fichier à la donnée désignée par `identifier`. Au préalable, le fichier doit avoir été déposé sur l'espace temporaire de Nakala (`postdatas_uploads()`) et vous devez disposer de son identifiant `sha1`, qui doit être indiqué dans le corps de la requête.
 
 # exemple
 ```julia-repl
@@ -119,7 +119,7 @@ export postdatas_files
 """
     deletedatas_files(identifier::String, fileIdentifier::String, headers::Dict; apitest::Bool=false)
 
-Supprime un fichier (argument `fileIdentifier`) de la donnée Nakala dont l'identifiant correspond à `identifier`.
+Supprime le fichier `fileIdentifier` de la donnée Nakala désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -165,7 +165,7 @@ export deletedatas_files
 """
     postdatas(headers::Dict, body::Dict; apitest::Bool=false)
 
-Dépose une nouvelle donnée sur Nakala. Les métadonnées nécessaires à la création de la donnée sont déclarées avec l'argument `body`
+Dépose une nouvelle donnée sur Nakala. Les métadonnées nécessaires à la création de la donnée sont déclarées dans le `body`.
 
 # exemple
 ```julia-repl
@@ -233,7 +233,7 @@ export postdatas
 """
     getdatas(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupère les informations relatives à une donnée aynt pour identifiant `identifier`.
+Récupère les informations relatives à la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -291,7 +291,7 @@ export getdatas
 """
     getdatas_version(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupère la liste des versions d'une donnée.
+Récupère la liste des versions de la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -346,7 +346,7 @@ export getdatas_version
 """
     putdatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Modifie informations d'une donnée.
+Modifie les informations de la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -405,10 +405,15 @@ export putdatas
 """
     deletedatas(identifier::String, headers::Dict; apitest::Bool=false)
 
-Suppression d'une donnée.
+Supprime la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
+julia> Nakala.Datas.deletedatas(identifier, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => ""
+  "status"    => 204
+  "isSuccess" => true
 ```
 """
 function deletedatas(identifier::String, headers::Dict; apitest::Bool=false)
@@ -446,7 +451,7 @@ export deletedatas
 """
     getdatas_files(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération des métadonnées des fichiers associés à une donnée.
+Les métadonnées des fichiers associés à la donnée désignée par `identifier`.
 
 # exemple
 ```julia-repl
