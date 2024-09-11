@@ -4,10 +4,15 @@ using HTTP, JSON
 """
     getresourceprocessing(identifier::String, headers::Dict, apitest::Bool=false)
 
-État d'une ressource dans ElasticSearch et Datacite.
+État d'une ressource désignée par `identifier` dans ElasticSearch et Datacite.
 
 # exemple
 ```julia-repl
+julia> Nakala.getresourceprocessing(identifier, headers, apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("action"=>"update", "status"=>"start", "service"=>"datacite", "datestamp"=>"2024-09-11T19:34:10+02:00"), Dict{String, Any}("acti…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getresourceprocessing(identifier::String, headers::Dict; apitest::Bool=false)

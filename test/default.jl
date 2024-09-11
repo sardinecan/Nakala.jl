@@ -37,9 +37,9 @@ body = Dict(
   ],
   :rights => []
 )
-postdatas_response = Nakala.Datas.postdatas(headers, body, true)
+postdatas_response = Nakala.Datas.postdatas(headers, body, apitest=true)
 identifier = postdatas_response["body"]["payload"]["id"]
 
 
-getresourceprocessing_response = Nakala.getresourceprocessing(identifier, headers, true)
+getresourceprocessing_response = Nakala.getresourceprocessing(identifier, headers, apitest=true)
 @test getresourceprocessing_response["status"] == 200

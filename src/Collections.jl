@@ -4,7 +4,7 @@ using HTTP, JSON
 """
     getcollections(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération des informations sur une collection.
+Récupère les informations de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -50,7 +50,7 @@ export getcollections
 """
     putcollections(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Modification des informations d'une collection.
+Modifie les informations de la collection désignée par `ìdentifier.
 
 # exemple
 ```julia-repl
@@ -91,7 +91,7 @@ export putcollections
 """
     deletecollections(identifier::String, headers::Dict; apitest::Bool=false)
 
-Suppression d'une collection.
+Supprime la collection désignée par `ìdentifier`.
 
 # exemple
 ```julia-repl
@@ -132,7 +132,7 @@ export deletecollections
 """
     postcollections(headers::Dict, body::Dict; apitest::Bool=false)
 
-Création d'une nouvelle collection.
+Crée une nouvelle collection.
 
 # exemple
 ```julia-repl
@@ -174,7 +174,7 @@ export postcollections
 """
     getcollections_datas(identifier::String, params::Array, headers::Dict; apitest::Bool=false)
 
-Récupération de la liste paginée des données contenues dans la collection.
+Récupère la liste paginée des données contenues dans la collection désignée par `ìdentifier`.
 
 # exemple
 ```julia-repl
@@ -216,7 +216,7 @@ export getcollections_datas
 """
     postcollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Ajout d'une liste de données dans une collection.
+Ajoute une liste de données à la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -257,7 +257,7 @@ export postcollections_datas
 """
     deletecollections_datas(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Suppression d'une liste de données d'une collection.
+Supprime une liste de données de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -299,7 +299,7 @@ export deletecollections_datas
 """
     getcollections_metadatas(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération des métadonnées d'une collection.
+Récupère les métadonnées de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -341,7 +341,7 @@ export getcollections_metadatas
 """
     postcollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Ajout d'une nouvelle métadonnée à une collection.
+Ajoute nouvelle métadonnée à la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -383,7 +383,7 @@ export postcollections_metadatas
 """
     deletecollections_metadatas(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Suppression de métadonnées pour une collection.
+Supprime des métadonnées de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -424,7 +424,7 @@ export deletecollections_metadatas
 """
     getcollections_rights(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération des utilisateurs et des groupes ayant des droits sur la collection.
+Récupère les utilisateurs et les groupes ayant des droits sur la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -466,7 +466,7 @@ export getcollections_rights
 """
     postcollections_rights(identifier::String, headers::Dict, body::Array; apitest::Bool=false)
 
-Ajout de droits sur une collection.
+Ajoute des droits sur la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -508,7 +508,7 @@ export postcollections_rights
 """
     deletecollections_rights(identifier::String, headers::Dict, body::Dict; apitest::Bool=false)
 
-Suppression des droits pour utilisateur ou un groupe d'utilisateurs sur une collection.
+Supprime les droits d'un utilisateur ou d'un groupe d'utilisateurs sur la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -550,7 +550,7 @@ export deletecollections_rights
 """
     getcollections_status(identifier::String, headers::Dict; apitest::Bool=false)
 
-Récupération du statut d'une collection.
+Récupère le statut de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl
@@ -592,7 +592,7 @@ export getcollections_status
 """
     putcollections_status(identifier::String, status::String, headers::Dict; apitest::Bool=false)
 
-Changement du statut d'une collection.
+Modifie le statut de la collection désignée par `identifier`.
 
 # exemple
 ```julia-repl

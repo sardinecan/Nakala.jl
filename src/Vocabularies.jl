@@ -4,10 +4,15 @@ using HTTP, JSON
 """
     getvocabularies_licenses(params::Array; apitest::Bool=false)
 
-Récupération des licences des données de Nakala.
+Récupère les licences des données de Nakala.
 
 # exemple
 ```julia-repl
+julia> Nakala.Vocabularies.getvocabularies_licenses(["q" => "public"], apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("name"=>"Affero General Public License v1.0", "code"=>"AGPL-1.0", "url"=>"https://spdx.org/licenses/AGPL-1.0.html#licenseText"),…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_licenses(params::Array; apitest::Bool=false)
@@ -47,10 +52,15 @@ export getvocabularies_licenses
 """
     getvocabularies_languages(params::Array; apitest::Bool=false)
 
-Récupération des langues des métadonnées.
+Récupère les langues des métadonnées.
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_languages([:code => "fr"], apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("label"=>"French", "id"=>"fr")]
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_languages(params::Array; apitest::Bool=false)
@@ -91,10 +101,15 @@ export getvocabularies_languages
 """
     getvocabularies_countryCodes(params::Array; apitest::Bool=false)
 
-Récupération des codes pays ISO 3166 (alpha-2).
+Récupère les codes pays ISO 3166 (alpha-2).
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_countryCodes([:q => "fr"], apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any[Dict{String, Any}("label"=>"Central African Republic (the)", "id"=>"CF"), Dict{String, Any}("label"=>"France", "id"=>"FR"), Dict{String, Any}("lab…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_countryCodes(params::Array; apitest::Bool=false)
@@ -135,10 +150,15 @@ export getvocabularies_countryCodes
 """
     getvocabularies_dataStatuses(;apitest::Bool=false)
 
-Récupération des statuts des données de Nakala.
+Récupère les statuts des données de Nakala.
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_dataStatuses(apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("pending"=>"pending data", "moderated"=>"moderated data", "deleted"=>"deleted data", "old"=>"old version", "published"=>"published d…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_dataStatuses(;apitest::Bool=false)
@@ -179,10 +199,15 @@ export getvocabularies_dataStatuses
 """
     getvocabularies_collectionStatuses(;apitest::Bool=false)
 
-Récupération des statuts des collections de Nakala.
+Récupère les statuts des collections de Nakala.
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_collectionStatuses(apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Dict{String, Any}("public"=>"public collection", "private"=>"private collection")
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_collectionStatuses(;apitest::Bool=false)
@@ -223,10 +248,15 @@ export getvocabularies_collectionStatuses
 """
     getvocabularies_datatypes(;apitest::Bool=false)
 
-Récupération des types des données de Nakala.
+Récupère les types des données de Nakala.
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_datatypes(apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any["http://purl.org/coar/resource_type/c_c513", "http://purl.org/coar/resource_type/c_12ce", "http://purl.org/coar/resource_type/c_18cc", "http://pur…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_datatypes(;apitest::Bool=false)
@@ -267,10 +297,15 @@ export getvocabularies_datatypes
 """
     getvocabularies_properties(;apitest::Bool=false)
 
-Récupération des propriétés des métadonnées.
+Récupère les propriétés des métadonnées.
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_properties(apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any["http://nakala.fr/terms#title", "http://nakala.fr/terms#creator", "http://nakala.fr/terms#created", "http://nakala.fr/terms#license", "http://naka…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_properties(;apitest::Bool=false)
@@ -311,10 +346,15 @@ export getvocabularies_properties
 """
     getvocabularies_metadatatypes(;apitest::Bool=false)
 
-Récupération des types des métadonnées.
+Récupère les types des métadonnées.
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_metadatatypes(apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any["http://purl.org/dc/terms/Box", "http://purl.org/dc/terms/ISO3166", "http://purl.org/dc/terms/Period", "http://purl.org/dc/terms/Point", "http://p…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_metadatatypes(;apitest::Bool=false)
@@ -355,10 +395,15 @@ export getvocabularies_metadatatypes
 """
     getvocabularies_dcmitypes(;apitest::Bool=false)
 
-Récupération des types DCMI.
+Récupère les types DCMI.
 
 # exemple
 ```julia-repl
+julia> Nakala.getvocabularies_dcmitypes(apitest=true)
+Dict{String, Any} with 3 entries:
+  "body"      => Any["http://purl.org/dc/dcmitype/Collection", "http://purl.org/dc/dcmitype/Dataset", "http://purl.org/dc/dcmitype/Event", "http://purl.org/dc/dcmitype…
+  "status"    => 200
+  "isSuccess" => true
 ```
 """
 function getvocabularies_dcmitypes(;apitest::Bool=false)
