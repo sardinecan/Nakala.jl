@@ -10,7 +10,7 @@ Chaque fonction du package permet d'envoyer une requête à un *endpoint* spéci
 
 Pour dialoguer avec l’API, les fonctions peuvent prendre jusqu'à 3 voire 4 arguments obligatoires :
 
-- `identifier` : identifiant de la donnée, de la collection, etc. que l’on souhaite requêter ;
+- `identifier`, `fileIdentifier` : identifiant de la donnée, de la collection, etc. que l’on souhaite requêter ;
 - `headers` : l'en-tête HTTP, contenant généralement votre clé API et, selon la requête, le type de données envoyées et le type de données acceptées en retour ;
 - `body` : le corps de votre requête contenant des informations structurées
 - `params` : des paramètres qui sont passés dans l’url de la requête, afin, souvent, de filtrer les résultats.
@@ -56,7 +56,7 @@ Dict{String, Any} with 3 entries:
   "isSuccess" => true
 ```
 
-La fonction `postdatas_uploads()` retourne un dictionnaire. La réponse du serveur correspond à la valeur de la clé "body".
+La fonction `postdatas_uploads()` retourne un dictionnaire. La réponse du serveur correspond à la valeur de la clé `body`.
 
 Afin d'associer le fichier à la future donnée, il est nécessaire de récupérer son identifiant `sha1`. Cela peut être effectuer avec la commande suivante :
 
