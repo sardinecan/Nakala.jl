@@ -11,7 +11,7 @@ Chaque fonction du package permet d'envoyer une requête à un *endpoint* spéci
 Pour dialoguer avec l’API, les fonctions peuvent prendre jusqu'à 3 voire 4 arguments obligatoires :
 
 - `identifier` : identifiant de la donnée, de la collection, etc. que l’on souhaite requêter ;
-- `headers` : l'entête HTTP, contenant généralement votre clé API et, selon la requête, le type de données envoyées et le type de données acceptées en retour ;
+- `headers` : l'en-tête HTTP, contenant généralement votre clé API et, selon la requête, le type de données envoyées et le type de données acceptées en retour ;
 - `body` : le corps de votre requête contenant des informations structurées
 - `params` : des paramètres qui sont passés dans l’url de la requête, afin, souvent, de filtrer les résultats.
 
@@ -28,7 +28,7 @@ La documentation nous apprend que les fichiers constituant une donnée doivent �
 La fonction `postdatas_uploads()` permet de déposer un fichier dans un espace temporaire, avant qu'il soit assigné à une donnée. Elle prend deux argument :
 
 - `file`, qui correspond au chemin vers le fichier à envoyer ;
-- `headers`, l'entête de la requête.
+- `headers`, l'en-tête de la requête.
 
 Nous ajouterons le *keyword argument* `apitest=true` afin de travailler avec l'API de test.
 
@@ -164,7 +164,7 @@ La documentation nous apprend que toute métadonnée doit contenir :
 }
 ```
 
-Il est possible d'exprimer cet objet avec un dictionnaire Julia :
+Objet que l'on peut exprimer avec un dictionnaire Julia :
 
 ```julia-repl
 julia> body = Dict( 
