@@ -25,7 +25,8 @@ export getdatas_resume
 
 """
     getfiles_urls_from_data(data::Dict, filenames::Vector;  apitest::Bool=false)
-À partir d'une liste de fichiers dans une donnée, retourne les urls de téléchargement.
+
+À partir d'une liste de fichiers issue d'une donnée Nakala, retourne les urls de téléchargement.
 """
 function getfiles_urls_from_data(data::Dict, filenames::Vector; apitest::Bool=false)
   apitest==false ? apiurl = "https://api.nakala.fr" : apiurl = "https://apitest.nakala.fr"
@@ -46,19 +47,13 @@ end
 export getfiles_urls_from_data
 
 
+"""
 #=
-submitDataFromFolder : dépôt d'une donnée à partir d'un dossier contenant les fichiers constitutifs de la donnée et les métadonnées contenus dans un ficheir csv
-@arg path : chemin vers le dossier contenant les données à déposer
-@arg directory : nom du dossier constitutif de la donnée
+    postdatas_from_folder(dirpath::String, headers::Dict; apitest::Bool=false)
+
+Dépose une donnée à partir d'un répertoire contenant les fichiers à envoyer et les métadonnées au format `csv`.
 =#
-
-#==
-  - Avoir une liste des fichiers à envoyer
-  - Envoyer les fichiers à partir d'une liste et noter les sha1
-  - créer les métadonnées de la donnée avec celles des données
-  - envoyer la donnée
-==#
-
+"""
 function postdatas_from_folder(dirpath::String, headers::Dict; apitest::Bool=false)
   fileslist_csv = joinpath(dirpath, "_.files.csv")
   uploadfiles_headers = Dict( 
@@ -81,8 +76,11 @@ export postdatas_from_folder
 
 
 """
+    listfiles(dirpath::String; writecsv::Bool=false)
 
-liste les fichiers contenus dans un dossier (`path`) et retourne un `DataFrame` contenant cette liste. Si `writecsv == true`, un fichier `_.files.csv` est écrit dans le répertoire. 
+liste les fichiers contenus dans un dossier (`dirpath`) et retourne un `DataFrame` contenant cette liste.
+
+Si l'argument `writecsv=true` est indiqué, un fichier `_.files.csv` est écrit dans le répertoire.
 """
 # Fonction pour lister les fichiers dans un dossier et écrire dans un fichier CSV
 function listfiles(dirpath::String; writecsv::Bool=false)
@@ -97,16 +95,13 @@ function listfiles(dirpath::String; writecsv::Bool=false)
       println("Aucun fichier trouvé dans le dossier : $dir")
       return
   end
-
-  # Créer un DataFrame avec les chemins des fichiers
-  # la colonne sha1 sera ajoutée au moment de l'envoi des fichiers
+  
   fileslist_dataframe = DataFrame(
     files = fileslist,
     embargoed=missing,
     description=missing
   )
   
-  # Écrire dans le fichier CSV
   if writecsv == true
     CSV.write(joinpath(dirpath, "_.files.csv"), fileslist_dataframe)
     println("Le fichier _.files.csv a été créé avec succès.")
@@ -117,6 +112,11 @@ export listfiles
 
 
 """
+    uploadfiles_from_csv(fileslist_csv::String, headers::Dict; writecsv::Bool=false, apitest::Bool=false)
+
+Envoie des fichiers dans l'espace temporaire de Nakala à partir d'une liste `csv`.
+
+La liste peut être établie automatiquement avec la fonction `listfiles()`.
 """
 function uploadfiles_from_csv(fileslist_csv::String, headers::Dict; writecsv::Bool=false, apitest::Bool=false)
   dirpath = abspath(dirname(fileslist_csv))
@@ -148,7 +148,11 @@ end
 export uploadfiles_from_csv
 
 
+"""
+    metadata_from_csv(path::String)
 
+Prépare les métadonnées pour la création d'une donnée sur Nakala à partir d'un fichier `csv` et retourne une dictionnaire.
+"""
 function metadata_from_csv(path::String)
   metadata = CSV.read(path, DataFrame, header=1) # fichier de métadonnées 
 
