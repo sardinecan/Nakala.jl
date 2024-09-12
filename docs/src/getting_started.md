@@ -145,7 +145,7 @@ julia> getdatas_response["body"]["metas"] # les métadonnées
  Dict{String, Any}("propertyUri" => "http://nakala.fr/terms#creator", "value" => Dict{String, Any}("orcid" => nothing, "surname" => "Rémi", "givenname" => "Fassol", "fullName" => "Fassol Rémi", "authorId" => "ca0fa856-3f7f-4e31-b339-066e173beeaf"))
 ```
 
-Maintenant, supposons que nous souhaitons ajouter une nouvelle métadonnée, le titre anglais de la donnée par exemple. Nous pourrons effectuer cette opération à l'aide de la fonction `postdatas_metadatas()` qui prend elle aussi deux arguments : l'identifiant de la donnée (`identifier`), l'en-tête (`headers`) et la nouvelle métadonnée structurée en JSON dans le `body`.
+Maintenant, supposons que nous souhaitons ajouter une nouvelle métadonnée, le titre anglais de la donnée par exemple. Nous pourrons effectuer cette opération à l'aide de la fonction `postdatas_metadatas()` qui prend trois arguments : l'identifiant de la donnée (`identifier`), l'en-tête (`headers`) et la nouvelle métadonnée structurée en JSON dans le `body`.
 
 La documentation nous apprend que toute métadonnée doit contenir :
 
