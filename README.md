@@ -17,3 +17,5 @@ Nakala.jl is built around 7 modules corresponding to the API endpoints:
 An eighth module, Extras, includes a series of functions for uploading data and files based on information contained in a CSV file.
 
 To execute requests, you must have a Nakala API key or use a public key with [Nakala's Test API](https://test.nakala.fr/).
+
+The documentation (in French) is available online: [sardinecan.github.io/Nakala.jl](https://sardinecan.github.io/Nakala.jl).
