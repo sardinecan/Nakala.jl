@@ -25,7 +25,7 @@ Pour prendre en main Nakala.jl, voyons comment déposer une donnée sur Nakala, 
 ### Déposer un fichier sur l'espace temporaire
 La documentation nous apprend que les fichiers constituant une donnée doivent être déposés au préalable de la création de ladite donnée.
 
-La fonction `postdatas_uploads()` permet de déposer un fichier dans un espace temporaire, avant qu'il soit assigné à une donnée. Elle prend deux argument :
+La fonction `postdatas_uploads()` permet de déposer un fichier dans un espace temporaire, avant qu'il soit assigné à une donnée. Elle prend deux arguments :
 
 - `file`, qui correspond au chemin vers le fichier à envoyer ;
 - `headers`, l'en-tête de la requête.
