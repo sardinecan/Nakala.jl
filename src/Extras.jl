@@ -60,7 +60,7 @@ function postdatas_from_folder(dirpath::String, headers::Dict; apitest::Bool=fal
     "X-API-KEY" => get(headers, "X-API-KEY", ""),
     :accept => "application/json"
   )
-  uploadedfiles = uploadfiles_from_csv(fileslist_csv, uploadfiles_headers, true, apitest=apitest)
+  uploadedfiles = uploadfiles_from_csv(fileslist_csv, uploadfiles_headers; writecsv=true, apitest=apitest)
   
   # métadonnées de la donnée
   metadata_csv = metadata_from_csv(joinpath(dirpath, "_.metadata.csv"))
