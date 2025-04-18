@@ -159,7 +159,7 @@ function metadata_from_csv(path::String)
   title = metadata[!, :title][1] 
   metadata[!, :collections][1] !== missing  ? collections = split(metadata[!, :collections][1], ";") : collections = nothing
   authors = split(metadata[!, :authors][1], ";")
-  date = metadata[!, :date][1]
+  date = metadata[!, :date][1] !== missing ? metadata[!, :data] : nothing
   license = metadata[!, :licence][1]
   status = metadata[!, :status][1]
   metadata[!, :datatype][1] !== missing ? datatypes = split(metadata[!, :datatype][1], ";") : datatypes = nothing
